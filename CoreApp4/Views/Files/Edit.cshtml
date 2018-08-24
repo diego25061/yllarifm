@@ -1,0 +1,50 @@
+﻿@model CoreApp4.Models.DB.File
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+<h4>File</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Codigo" class="control-label"></label>
+                <input asp-for="Codigo" class="form-control" />
+                <span asp-validation-for="Codigo" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="IdFile" />
+            <div class="form-group">
+                <label asp-for="IdBiblia" class="control-label"></label>
+                <select asp-for="IdBiblia" class="form-control" asp-items="ViewBag.IdBiblia"></select>
+                <span asp-validation-for="IdBiblia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdAgencia" class="control-label"></label>
+                <select asp-for="IdAgencia" class="form-control" asp-items="ViewBag.IdAgencia"></select>
+                <span asp-validation-for="IdAgencia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
