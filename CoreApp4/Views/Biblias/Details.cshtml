@@ -1,0 +1,31 @@
+﻿@model CoreApp4.Models.DB.Biblia
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Biblia</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Mes)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Mes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Anho)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Anho)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.IdBiblia">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

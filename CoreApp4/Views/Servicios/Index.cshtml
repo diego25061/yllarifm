@@ -1,0 +1,108 @@
+﻿@model IEnumerable<CoreApp4.Models.DB.Servicio>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Fecha)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TipoServicio)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EsProvincia)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HoraRecojo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HoraSalida)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Vuelo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Pasajeros)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Vr)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tc)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Observaciones)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdFileNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdProveedorNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoServicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EsProvincia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HoraRecojo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HoraSalida)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vuelo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pasajeros)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Observaciones)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdFileNavigation.Codigo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdProveedorNavigation.Nombre)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdServicio">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdServicio">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdServicio">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
