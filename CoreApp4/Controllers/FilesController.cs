@@ -5,11 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CoreApp4.Models.DB;
+using YllariFM.Source.ViewModels;
+using System.Diagnostics;
+using YllariFM.Models.DB;
+using YllariFM.Source;
+using Microsoft.AspNetCore.Http;
 
-namespace CoreApp4.Controllers
+namespace YllariFM.Controllers
 {
-    public class FilesController : Controller
+    public class FilesController : BaseController
     {
         private readonly YllariFMContext _context;
 
@@ -161,5 +165,122 @@ namespace CoreApp4.Controllers
         {
             return _context.File.Any(e => e.IdFile == id);
         }
+
+        //===================================================================== api
+
+
+        [Route("Files/Crear")]
+        [HttpPost]
+        public ActionResult Crear([FromBody] CreateFileVm vm)
+        {
+            Trace.WriteLine("Creando " + Json(vm).Value);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    //YllariFMContext context = new YllariFMContext();
+                    File file = vm.toDbFile();
+                    _context.File.Add(file);
+                    _context.SaveChanges();
+                    return Json(CrearContRespuestaTransaccion("File guardado exitosamente",""));
+                }
+                else
+                {
+                    return Json(CrearContRespuestaTransaccion("","Datos incorrectos"), StatusCodes.Status400BadRequest);
+                }
+
+                
+            }catch(Exception ex)
+            {
+                //return Json(Utils.GetFullMensajeExcepcion(ex) + "<br>" + ex.StackTrace);
+                string msjError = Utils.GetFullMensajeExcepcion(ex) + "<br>" + ex.StackTrace;
+                return Json(CrearContRespuestaTransaccion("", msjError), StatusCodes.Status500InternalServerError);
+            }
+            
+        }
+
+        [Route("Files/Crear")]
+        public ActionResult Crear()
+        {
+            return View("Crear");
+        }
+        /*
+        [Route("Files")]
+        public ActionResult Listar()
+        {
+            var yllariFMContext = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation);
+            return View("Index", yllariFMContext.ToListAsync());
+        }*/
+
+        [Route("Files/{id}")]
+        public ActionResult Detalles(int id)
+        {
+            return View();
+        }
+
+        [Route("Files/Editar/{id}")]
+        public ActionResult Editar(int id)
+        {
+            return View();
+        }
+
+        [Route("Files/Editar/{id}")]
+        public ActionResult Editar(int id, CreateFileVm vm)
+        {
+            var context = new YllariFMContext();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var actual = context.File.Where(x => x.IdFile == id).FirstOrDefault();
+                    actual = vm.toDbFile();
+                    context.SaveChanges();
+                    Debug.WriteLine("Objeto grabado");
+                    return Json("success");
+                }
+                catch
+                {
+                    Debug.WriteLine("Error");
+                    return Json("error");
+                }
+            }
+            else
+            {
+                return Json("error2");
+            }
+        }
+
+
+            /*
+        [Route("api/file/{id}")]
+        public JsonResult getFile(int id)
+        {
+            File file = _context.File.Where(x => x.IdFile == id).FirstOrDefault();
+            if (file != null) {
+
+                List<object> servs = new List<object>();
+                List<object> transps = new List<object>();
+
+                foreach (var v in file.Servicio)
+                {
+                    servs.Add(new {
+                        ciudad = v.id
+                    });
+                }
+
+                object respuesta = new {
+                    codigo = file.Codigo,
+                    biblia = file.IdBiblia,
+                    servicios = file.Servicio
+                }
+            }
+            else
+            {
+                return Json("No encontrado");
+            }
+        }
+        
+         */
+
     }
 }

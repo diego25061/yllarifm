@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 namespace YllariFM.Models.DB
 {
-    public partial class Pasajero
+    public partial class Ciudad
     {
-        public int IdPasajero { get; set; }
+        public int IdCiudad { get; set; }
         public string Nombre { get; set; }
+        public string Pais { get; set; }
     }
 }

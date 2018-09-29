@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CoreApp4.Models.DB;
+using YllariFM.Models.DB;
 
 namespace CoreApp4.Controllers
 {
@@ -147,6 +145,21 @@ namespace CoreApp4.Controllers
         private bool BibliaExists(int id)
         {
             return _context.Biblia.Any(e => e.IdBiblia == id);
+        }
+
+
+        //===================================================================== api
+
+        [Route("api/biblias")]
+        public JsonResult listaBiblias()
+        {
+            var lista = _context.Biblia.ToList();
+            List<object> respuesta = new List<object>();
+            foreach(var b in lista)
+            {
+                respuesta.Add(new { id = b.IdBiblia , nombre = b.Mes + b.Anho });
+            }
+            return Json(respuesta);
         }
     }
 }

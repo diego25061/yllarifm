@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CoreApp4.Models.DB
+namespace YllariFM.Models.DB
 {
     public partial class Agencia
     {

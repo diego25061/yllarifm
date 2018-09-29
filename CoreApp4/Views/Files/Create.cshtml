@@ -4,44 +4,204 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section head3{
+
+    <link rel="stylesheet" href="~/theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+}
+
+@section tail2{
+    <script src="~/theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        $(document).ready(function () {
+            console.log("Ready!");
+            //$('#tabla1').DataTable();
+            start(); 
+        });
+
+        function start() {
+            //$("#container").html("hi");
+        }
+
+        function Transporte(ciudad, servicio, pasajeros, agencia, horaRecojo) {
+            var self = this;
+            self.ciudad = ko.observable(ciudad);
+            self.servicio = ko.observable(servicio);
+            self.pasajeros = ko.observable(pasajeros);
+            self.agencia = ko.observable(agencia);
+            self.horaRecojo = ko.observable(horaRecojo);
+        }
+
+        function Servicio(ciudad, servicio, hotel, pasajeros, nombrePax, agencia, tren, alm, obs) {
+            var self = this;
+            self.ciudad = ko.observable(ciudad);
+            self.servicio = ko.observable(servicio);
+            self.hotel = ko.observable(hotel);
+            self.pasajeros = ko.observable(pasajeros);
+            self.nombrePax = ko.observable(nombrePax);
+            self.agencia = ko.observable(agencia);
+            self.tren = ko.observable(tren);
+            self.alm = ko.observable(alm);
+            self.obs = ko.observable(obs);
+        }
+
+        function FileViewModel() {
+            var self = this;
+            self.codigo = ko.observable("08023");
+            self.biblia = ko.observable("Agosto 2018");
+
+
+            self.exponer = function () {
+
+                console.log("servicios: " + ko.toJSON(this));
+            };
+
+            self.enviar = function () {
+                $.ajax({
+                    url: 'Crear',
+                    cache: false,
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: ko.toJSON(this),
+                    success: function (data) {
+
+                    }
+                }).fail(
+                    function (xhr, textStatus, err) {
+                        alert(err);
+                    });
+            };
+
+            self.servicios = ko.observableArray([
+                { ciudad: 2, servicio: "Tour centro de lima", hotel: 1, pasajeros: 2, nombrePax: "Javier", agencia: 1, tren: "", alm: "", obs: "" },
+                { ciudad: 1, servicio: "Tour plaza de armas", hotel: 2, pasajeros: 4, nombrePax: "Carlos", agencia: 1, tren: "", alm: "", obs: "" },
+                { ciudad: 3, servicio: "Visita museo", hotel: 3, pasajeros: 3, nombrePax: "Larry", agencia: 2, tren: "", alm: "", obs: "" }
+            ]);
+
+            self.transportes = ko.observableArray([
+                { ciudad: "Pisco", servicio: "Transporte pisco playa", pasajeros: "4", agencia: "Yllari" }
+            ]);
+
+            self.ciudades = ko.observableArray([
+                { nombre: "Lima", id: 2 },
+                { nombre: "Cusco", id: 1 },
+                { nombre: "Arequipa", id: 3 },
+            ]);
+
+            self.agencias = ko.observableArray([
+                { nombre: "Golden", id: 1 },
+                { nombre: "Continental", id: 2 }
+            ]);
+
+            self.hoteles = ko.observableArray([
+                { nombre: "Melia", id: 1 },
+                { nombre: "Radisson", id: 2 },
+                { nombre: "Sheraton", id: 3 }
+            ]);
+
+            self.agregarServicio = function () {
+                vm.servicios.push(
+                    { ciudad: 2, servicio: "Tour centro de lima", hotel: 1, pasajeros: 2, nombrePax: "Javier", agencia: 1, tren: "", alm: "", obs: "" }
+                );
+            };
+        }
+
+        var vm = new FileViewModel();
+
+        ko.applyBindings(vm);
+
+    </script>
+}
+
 
 <h2>Create</h2>
 
 <h4>File</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Codigo" class="control-label"></label>
-                <input asp-for="Codigo" class="form-control" />
-                <span asp-validation-for="Codigo" class="text-danger"></span>
+
+<div id="container" class="row">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div>
+                        <label>Codigo</label>
+                        <input class="form-control" type="text" data-bind="value: codigo" />
+                    </div>
+                    <div>
+                        <label>Biblia</label>
+                        <select class="form-control" data-bind="value: biblia">
+                            <option>Agosto 2018</option>
+                            <option>Junio 2018</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="IdBiblia" class="control-label"></label>
-                <select asp-for="IdBiblia" class ="form-control" asp-items="ViewBag.IdBiblia"></select>
+        </div>
+
+
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <table class="table" id="tabla1">
+                        <thead>
+                            <tr>
+                                <th>Ciudad</th>
+                                <th>Servicio</th>
+                                <th>Hotel</th>
+                                <th>Pasajeros</th>
+                                <th>Nombre Pax.</th>
+                                <th>Agencia</th>
+                                <th>Tren</th>
+                                <th>ALM</th>
+                                <th>OBS</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: servicios">
+                            <tr>
+                                <td>
+                                    <select class="form-control" data-bind="options: $root.ciudades,
+                                    optionsText: 'nombre',
+                                    optionsValue: 'id',
+                                    value: ciudad"></select>
+                                </td>
+                                <td><input class="form-control" data-bind="value: servicio" /></td>
+                                <td>
+                                    <select class="form-control" data-bind="options: $root.hoteles,
+                                    optionsText: 'nombre',
+                                    optionsValue: 'id',
+                                    value: hotel"></select>
+                                </td>
+                                <td><input class="form-control" type="number" data-bind="value: pasajeros" /></td>
+                                <td><input class="form-control" data-bind="value: nombrePax" /></td>
+                                <td>
+                                    <select class="form-control" data-bind="options: $root.agencias,
+                                    optionsText: 'nombre',
+                                    optionsValue: 'id',
+                                    value: agencia"></select>
+                                </td>
+                                <td><input class="form-control" data-bind="value: tren" /></td>
+                                <td><input class="form-control" data-bind="value: alm" /></td>
+                                <td><input class="form-control" data-bind="value: obs" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button data-bind="click: agregarServicio">Agregar servicio</button>
+                    <button data-bind="click: exponer">Exponer</button>
+                    <button data-bind="click: enviar">Enviar</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdAgencia" class="control-label"></label>
-                <select asp-for="IdAgencia" class ="form-control" asp-items="ViewBag.IdAgencia"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
 
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

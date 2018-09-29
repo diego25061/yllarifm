@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CoreApp4.Models.DB;
+using YllariFM.Models.DB;
 
 namespace CoreApp4.Controllers
 {
@@ -17,6 +17,7 @@ namespace CoreApp4.Controllers
         {
             _context = context;
         }
+
 
         // GET: Agencias
         public async Task<IActionResult> Index()
@@ -148,5 +149,19 @@ namespace CoreApp4.Controllers
         {
             return _context.Agencia.Any(e => e.IdAgencia == id);
         }
+
+
+        [Route("api/Agencias")]
+        public JsonResult ListaSelect()
+        {
+            //object a = new { a = "a" };
+            List<object> objs = new List<object>();
+            var agencias = _context.Agencia.ToList();
+            foreach(var a in agencias){
+                objs.Add(new { id = a.IdAgencia, nombre = a.Nombre });
+            }
+            return Json(objs);
+        }
+
     }
 }

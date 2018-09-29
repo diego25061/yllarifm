@@ -2,22 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace CoreApp4.Models.DB
+namespace YllariFM.Models.DB
 {
     public partial class YllariFMContext : DbContext
     {
-        public YllariFMContext()
-        {
-        }
-
-        public YllariFMContext(DbContextOptions<YllariFMContext> options)
-            : base(options)
-        {
-        }
-
         public virtual DbSet<Agencia> Agencia { get; set; }
         public virtual DbSet<Biblia> Biblia { get; set; }
+        public virtual DbSet<Ciudad> Ciudad { get; set; }
         public virtual DbSet<File> File { get; set; }
+        public virtual DbSet<Hotel> Hotel { get; set; }
         public virtual DbSet<Orden> Orden { get; set; }
         public virtual DbSet<Pasajero> Pasajero { get; set; }
         public virtual DbSet<Proveedor> Proveedor { get; set; }
@@ -30,8 +23,19 @@ namespace CoreApp4.Models.DB
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer(@"Data Source=serdc.database.windows.net;Initial Catalog=YllariFM;User=serdc;Password=123456Upc");
             }
-        }*/
-         
+        }
+        */
+
+
+        public YllariFMContext()
+        {
+        }
+
+        public YllariFMContext(DbContextOptions<YllariFMContext> options)
+            : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Agencia>(entity =>
@@ -64,6 +68,25 @@ namespace CoreApp4.Models.DB
             modelBuilder.Entity<Biblia>(entity =>
             {
                 entity.HasKey(e => e.IdBiblia);
+
+                entity.HasIndex(e => new { e.Anho, e.Mes })
+                    .HasName("IX_Biblia")
+                    .IsUnique();
+            });
+
+            modelBuilder.Entity<Ciudad>(entity =>
+            {
+                entity.HasKey(e => e.IdCiudad);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Pais)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<File>(entity =>
@@ -79,6 +102,8 @@ namespace CoreApp4.Models.DB
                     .HasMaxLength(750)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
                 entity.HasOne(d => d.IdAgenciaNavigation)
                     .WithMany(p => p.File)
                     .HasForeignKey(d => d.IdAgencia)
@@ -90,6 +115,16 @@ namespace CoreApp4.Models.DB
                     .HasForeignKey(d => d.IdBiblia)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_File_Biblia");
+            });
+
+            modelBuilder.Entity<Hotel>(entity =>
+            {
+                entity.HasKey(e => e.IdHotel);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(120)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Orden>(entity =>
@@ -125,11 +160,24 @@ namespace CoreApp4.Models.DB
             {
                 entity.HasKey(e => e.IdServicio);
 
+                entity.Property(e => e.Alm)
+                    .HasColumnName("ALM")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Ciudad)
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Fecha).HasColumnType("datetime");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombrePasajero)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Observaciones)
@@ -144,6 +192,14 @@ namespace CoreApp4.Models.DB
                 entity.Property(e => e.TipoServicio)
                     .IsRequired()
                     .HasMaxLength(5)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Transp)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Tren)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Vr)
