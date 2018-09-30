@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YllariFM.Models.DB;
+using YllariFM.Source;
 
 namespace CoreApp4.Controllers
 {
@@ -154,12 +157,26 @@ namespace CoreApp4.Controllers
         public JsonResult listaBiblias()
         {
             var lista = _context.Biblia.ToList();
+            lista.OrderByDescending(x => Convert.ToInt16(x.Anho.ToString("0000" +""+ x.Mes.ToString("00"))));
             List<object> respuesta = new List<object>();
             foreach(var b in lista)
             {
-                respuesta.Add(new { id = b.IdBiblia , nombre = b.Mes + b.Anho });
+                respuesta.Add(new { id = b.IdBiblia , nombre = Utils.getNombreBiblia(b)});
             }
             return Json(respuesta);
         }
+
+        /*
+        [Route("api/biblias/actualFecha")]
+        public JsonResult bibliaActual()
+        {
+            int mes = Utils.fechaPeruanaActual().Month;
+            int anho = Utils.fechaPeruanaActual().Year;
+            Trace.WriteLine("mes actual:" + mes);
+            return Json(new
+            {
+                mes,anho,fechaPeruana=Utils.fechaPeruanaActual()
+            });
+        }*/
     }
 }

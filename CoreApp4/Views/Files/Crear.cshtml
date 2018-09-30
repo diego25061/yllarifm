@@ -24,6 +24,9 @@
             start();
         });
 
+        var vm ;
+
+        /*
         function actualizarservs() {
             /*
             vm.servicios([
@@ -31,48 +34,36 @@
                 { ciudad: 1, servicio: "Tour plaza de armas", hotel: 2, pasajeros: 4, nombrePax: "Carlos", agencia: 1, tren: "", alm: "", obs: "" },
                 { ciudad: 3, servicio: "Visita museo", hotel: 3, pasajeros: 3, nombrePax: "Larry", agencia: 2, tren: "", alm: "", obs: "" }
             ]);*/
-            console.log("aaaaaaaaaaaaaaaa");
             //ko.applyBindings(vm);
-        }
+        /*}*/
 
         function start() {
-            //dr_mostrarDialogo("contDialogo", "holas", "success");
-            //$("#container").html("hi");
             cargarAgencias();
-        }
-
-        function Transporte(fecha, ciudad, horaRecojo, horaSalida, vuelo, servicio, pasajeros, nombrePax, vr, agencia, tc, transp, obs) {
-            var self = this;
-            self.fecha = ko.observable(fecha);
-            self.ciudad = ko.observable(ciudad);
-            self.horaRecojo = ko.observable(horaRecojo);
-            self.horaSalida = ko.observable(horaSalida);
-            self.vuelo = ko.observable(vuelo);
-            self.servicio = ko.observable(servicio);
-            self.pasajeros = ko.observable(pasajeros);
-            self.nombrePax = ko.observable(nombrePax);
-            self.vr = ko.observable(vr);
-            self.agencia = ko.observable(agencia);
-            self.tc = ko.observable(tc);
-            self.transp = ko.observable(transp);
-            self.obs = ko.observable(obs);
+            cargarBiblias();
+            vm = new FileViewModel();
+            ko.applyBindings(vm);
         }
 
 
-        function Servicio(fecha, ciudad, servicio, hotel, pasajeros, nombrePax, agencia, tren, alm, obs) {
-            var self = this;
-            self.fecha = ko.observable(fecha);
-            self.ciudad = ko.observable(ciudad);
-            self.servicio = ko.observable(servicio);
-            self.hotel = ko.observable(hotel);
-            self.pasajeros = ko.observable(pasajeros);
-            self.nombrePax = ko.observable(nombrePax);
-            self.agencia = ko.observable(agencia);
-            self.tren = ko.observable(tren);
-            self.alm = ko.observable(alm);
-            self.obs = ko.observable(obs);
+        function cargarAgencias() {
+            $.getJSON("/api/agencias", function (data) {
+                ko.mapping.fromJS(data, {}, vm.agencias);
+            }).fail(function (data) {
+                var msj = data.responseJSON;
+                dr_mostrarDialogo("contDialogo", "ERROR AL CARGAR AGENCIAS: "+ msj, "danger");
+            });
         }
 
+        function cargarBiblias() {
+            $.getJSON("/api/biblias", function (data) {
+                data.reverse();
+                ko.mapping.fromJS(data, {}, vm.biblias);
+            }).fail(function (data) {
+                var msj = data.responseJSON;
+                dr_mostrarDialogo("contDialogo", "ERROR AL CARGAR BIBLIAS: " + msj, "danger");
+            });;
+        }
+        @*
         function cargarAgencias() {
             var datos;
             $.getJSON("/api/agencias", function (data) {
@@ -87,20 +78,53 @@
 
                 });
 
-                console.log("datos recibidos: " + data);
+                console.log("datos recibidos: ");
+                console.log(data);
                 datos = data;
                 vm.ciudades(data);
                 /*
                 ko.mapping.fromJS(data, {}, vm.ciudades);
                 console.log("ciudades: " + vm.ciudades.length);*/
             });
+        }*@
+        function Transporte(fecha, ciudad, horaRecojo, horaSalida, vuelo, servicio, pasajeros, nombrePax, vr,  tc, transp, obs) {
+            var self = this;
+            self.fecha = ko.observable(fecha);
+            self.ciudad = ko.observable(ciudad);
+            self.horaRecojo = ko.observable(horaRecojo);
+            self.horaSalida = ko.observable(horaSalida);
+            self.vuelo = ko.observable(vuelo);
+            self.servicio = ko.observable(servicio);
+            self.pasajeros = ko.observable(pasajeros);
+            self.nombrePax = ko.observable(nombrePax);
+            self.vr = ko.observable(vr);
+            //self.agencia = ko.observable(agencia);
+            self.tc = ko.observable(tc);
+            self.transp = ko.observable(transp);
+            self.obs = ko.observable(obs);
         }
+
+        function Servicio(fecha, ciudad, servicio, hotel, pasajeros, nombrePax,  tren, alm, obs) {
+            var self = this;
+            self.fecha = ko.observable(fecha);
+            self.ciudad = ko.observable(ciudad);
+            self.servicio = ko.observable(servicio);
+            self.hotel = ko.observable(hotel);
+            self.pasajeros = ko.observable(pasajeros);
+            self.nombrePax = ko.observable(nombrePax);
+            //self.agencia = ko.observable(agencia);
+            self.tren = ko.observable(tren);
+            self.alm = ko.observable(alm);
+            self.obs = ko.observable(obs);
+        }
+
 
         function FileViewModel() {
             var self = this;
-            self.codigo = ko.observable("08023");
-            self.biblia = ko.observable("Agosto 2018");
-            self.agencia = ko.observable("Golden");
+            self.codigo = ko.observable();
+            self.idBiblia = ko.observable();
+            self.idAgencia = ko.observable();
+            self.descripcion = ko.observable();
 
             self.exponer = function () {
 
@@ -125,15 +149,17 @@
                     }
                 });
             };
-
+            self.biblias = ko.observableArray([]);
             self.servicios = ko.observableArray([
-                { fecha : "", ciudad: 2, servicio: "Tour centro de lima", hotel: 1, pasajeros: 2, nombrePax: "Javier", agencia: 1, tren: "", alm: "", obs: "" },
-                { fecha: "", ciudad: 1, servicio: "Tour plaza de armas", hotel: 2, pasajeros: 4, nombrePax: "Carlos", agencia: 1, tren: "", alm: "", obs: "" },
-                { fecha: "", ciudad: 3, servicio: "Visita museo", hotel: 3, pasajeros: 3, nombrePax: "Larry", agencia: 2, tren: "", alm: "", obs: "" }
+                /*
+                    { fecha : "", ciudad: 2, servicio: "Tour centro de lima", hotel: 1, pasajeros: 2, nombrePax: "Javier", agencia: 1, tren: "", alm: "", obs: "" },
+                    { fecha: "", ciudad: 1, servicio: "Tour plaza de armas", hotel: 2, pasajeros: 4, nombrePax: "Carlos", agencia: 1, tren: "", alm: "", obs: "" },
+                    { fecha: "", ciudad: 3, servicio: "Visita museo", hotel: 3, pasajeros: 3, nombrePax: "Larry", agencia: 2, tren: "", alm: "", obs: "" }
+                    */
             ]);
 
             self.transportes = ko.observableArray([
-                { fecha: "", ciudad: 1, horaRecojo: "19:30", horaSalida: "21:30", vuelo: "LA 2123", servicio: "MIRAMAR / APTO", pasajeros: 2, nombrePax: "", vr: "v", agencia: "Yllari", tc: "", transp: "LIM / CUS", obs: "" }
+                //{ fecha: "", ciudad: 1, horaRecojo: "19:30", horaSalida: "21:30", vuelo: "LA 2123", servicio: "MIRAMAR / APTO", pasajeros: 2, nombrePax: "", vr: "v", agencia: "Yllari", tc: "", transp: "LIM / CUS", obs: "" }
             ]);
 
             self.ciudades = ko.observableArray(
@@ -141,19 +167,20 @@
             );
 
             self.agencias = ko.observableArray([
+            /*
                 { nombre: "Golden", id: 1 },
-                { nombre: "Continental", id: 2 }
+                { nombre: "Continental", id: 2 }*/
             ]);
-
+            /*
             self.hoteles = ko.observableArray([
                 { nombre: "Melia", id: 1 },
                 { nombre: "Radisson", id: 2 },
                 { nombre: "Sheraton", id: 3 }
-            ]);
+            ]);*/
 
             self.agregarServicio = function () {
                 self.servicios.push(
-                    { fecha: "", ciudad: 1, servicio: "", hotel: 1, pasajeros: 0, nombrePax: "", agencia: 1, tren: "", alm: "", obs: "" }
+                    { fecha: "", ciudad: "", servicio: "", hotel: "", pasajeros: null, nombrePax: "", /*agencia: 1,*/ tren: "", alm: "", obs: "" }
                 );
             };
             self.quitarServicio = function (serv) {
@@ -161,7 +188,7 @@
             };
             self.agregarTransporte = function () {
                 self.transportes.push(
-                    { fecha: "", ciudad: 1, horaRecojo: "0", horaSalida: "00", vuelo: "vuelo", servicio: "", pasajeros: 0, nombrePax: "", vr: "", agencia: "", tc: "", transp: "", obs: "" }
+                    { fecha: "", ciudad: 1, horaRecojo: "0", horaSalida: "00", vuelo: "", servicio: "", pasajeros: null, nombrePax: "", vr: "", /*agencia: "",*/ tc: "", transp: "", obs: "" }
                 );
             };
             self.quitarTransporte = function (trans) {
@@ -170,8 +197,6 @@
 
         }
 
-        var vm = new FileViewModel();
-        ko.applyBindings(vm);
 
     </script>
 }
@@ -182,20 +207,41 @@
     <div class="col-md-12">
         <div class="box box-solid">
             <div class="box-body">
-                <div>
-                    <label>Codigo</label>
-                    <input class="form-control" type="text" data-bind="value: codigo" />
-                </div>
-                <div>
-                    <label>Biblia</label>
-                    <select class="form-control" data-bind="value: biblia">
-                        <option>Agosto 2018</option>
-                        <option>Junio 2018</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Agencia</label>
-                    <input class="form-control" type="text" data-bind="value: agencia" />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Codigo *</label>
+                            <input class="form-control" type="text" data-bind="value: codigo" placeholder="08-010" />
+                        </div>
+                        <div class="form-group">
+                            <label>Biblia *</label>
+                            @*
+                                <select class="form-control" data-bind="value: biblia">
+                                    <option>Agosto 2018</option>
+                                    <option>Junio 2018</option>
+                                </select>
+                            *@
+                            <select class="form-control" data-bind="options: biblias,
+                                        optionsText: 'nombre',
+                                        optionsValue: 'id',
+                                        value: idBiblia"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Agencia *</label>
+
+                            <select class="form-control" data-bind="options: agencias,
+                                        optionsText: 'nombre',
+                                        optionsValue: 'id',
+                                        value: idAgencia"></select>
+                            @*<input class="form-control" type="text" data-bind="value: agencia" placeholder="Golden" />*@
+                        </div>
+                        <div class="form-group">
+                            <label>Descripcion</label>
+                            <textarea class="form-control" rows="1" placeholder="Ingresar..." data-bind="value: descripcion"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -207,12 +253,12 @@
                 <table class="table" id="tabla1">
                     <thead>
                         <tr>
-                            <th>Fecha</th>
+                            <th>Fecha *</th>
                             <th>Ciudad</th>
-                            <th>Servicio</th>
+                            <th>Servicio *</th>
                             <th>Hotel</th>
-                            <th>Pasajeros</th>
-                            <th>Nombre Pax.</th>
+                            <th>Pasajeros *</th>
+                            <th>Nombre Pax. *</th>
                             <th>Tren</th>
                             <th>ALM</th>
                             <th>OBS</th>
@@ -221,25 +267,33 @@
                     <tbody data-bind="foreach: servicios">
                         <tr>
                             <td><input type="date" class="form-control" data-bind="value: fecha" /></td>
-                            <td>
-                                <select class="form-control" data-bind="options: $root.ciudades,
-                                    optionsText: 'nombre',
-                                    optionsValue: 'id',
-                                    value: ciudad"></select>
-                            </td>
-                            <td><input class="form-control" data-bind="value: servicio" /></td>
-                            <td>
-                                <select class="form-control" data-bind="options: $root.hoteles,
-                                    optionsText: 'nombre',
-                                    optionsValue: 'id',
-                                    value: hotel"></select>
-                            </td>
-                            <td><input class="form-control" type="number" data-bind="value: pasajeros" /></td>
-                            <td><input class="form-control" data-bind="value: nombrePax" /></td>
 
-                            <td><input class="form-control" data-bind="value: tren" /></td>
-                            <td><input class="form-control" data-bind="value: alm" /></td>
-                            <td><input class="form-control" data-bind="value: obs" /></td>
+                            <td><input class="form-control" data-bind="value: ciudad" placeholder="Lima" /></td>
+                            @*
+                                <td>
+                                    <select class="form-control" data-bind="options: $root.ciudades,
+                                        optionsText: 'nombre',
+                                        optionsValue: 'id',
+                                        value: ciudad"></select>
+                                </td>
+                            *@
+                            <td><input class="form-control" data-bind="value: servicio" placeholder="LEON DE ORO / APTO" /></td>
+
+                            <td><input class="form-control" data-bind="value: hotel" placeholder="Las Dunas" /></td>
+                            @*
+                                <td>
+                                    <select class="form-control" data-bind="options: $root.hoteles,
+                                        optionsText: 'nombre',
+                                        optionsValue: 'id',
+                                        value: hotel"></select>
+                                </td>
+                            *@
+                            <td><input class="form-control" type="number" data-bind="value: pasajeros" placeholder="2" /></td>
+                            <td><input class="form-control" data-bind="value: nombrePax" placeholder="Christian Cueva" /></td>
+
+                            <td><input class="form-control" data-bind="value: tren" placeholder="EXP" /></td>
+                            <td><input class="form-control" data-bind="value: alm" placeholder="AYASQA" /></td>
+                            <td><input class="form-control" data-bind="value: obs" placeholder="Observaciones..." /></td>
                             <td>
                                 <a class="btn btn-default" data-bind="click: $root.quitarServicio">
                                     <i class="fa fa-trash-o"></i>
@@ -248,7 +302,7 @@
                         </tr>
                     </tbody>
                 </table>
-                
+
             </div>
             <div class="box-footer">
                 <button class="btn btn-default" data-bind="click: agregarServicio"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;Agregar servicio</button>
@@ -266,14 +320,14 @@
 
 
                         <tr>
-                            <th>Fecha</th>
+                            <th>Fecha *</th>
                             <th>Ciudad</th>
-                            <th>Hora recojo</th>
-                            <th>Hora salida</th>
+                            <th>Hora recojo *</th>
+                            <th>Hora salida *</th>
                             <th>Vuelo</th>
-                            <th>Servicio</th>
-                            <th>Pasajeros</th>
-                            <th>Nombre Pax.</th>
+                            <th>Servicio *</th>
+                            <th>Pasajeros *</th>
+                            <th>Nombre Pax. *</th>
                             <th>V/R</th>
                             <th>TC</th>
                             <th>Transp.</th>
@@ -283,24 +337,27 @@
                     <tbody data-bind="foreach: transportes">
                         <tr>
                             <td><input type="date" class="form-control" data-bind="value: fecha" /></td>
-                            <td>
-                                <select class="form-control" data-bind="options: $root.ciudades,
-                                    optionsText: 'nombre',
-                                    optionsValue: 'id',
-                                    value: ciudad"></select>
-                            </td>
+                            <td><input class="form-control" data-bind="value: ciudad" placeholder="Lima" /></td>
+                            @*
+                                <td>
+                                    <select class="form-control" data-bind="options: $root.ciudades,
+                                        optionsText: 'nombre',
+                                        optionsValue: 'id',
+                                        value: ciudad"></select>
+                                </td>
+                            *@
                             <td><input type="time" class="form-control" data-bind="value: horaRecojo" /></td>
                             <td><input type="time" class="form-control" data-bind="value: horaSalida" /></td>
-                            <td><input class="form-control" data-bind="value: vuelo" /></td>
-                            <td><input class="form-control" data-bind="value: servicio" /></td>
-                            <td><input class="form-control" data-bind="value: pasajeros" /></td>
-                            <td><input class="form-control" data-bind="value: nombrePax" /></td>
+                            <td><input class="form-control" data-bind="value: vuelo" placeholder="LA 2009" /></td>
+                            <td><input class="form-control" data-bind="value: servicio" placeholder="APTO / CROWNE PLAZA" /></td>
+                            <td><input class="form-control" data-bind="value: pasajeros" placeholder="2" /></td>
+                            <td><input class="form-control" data-bind="value: nombrePax" placeholder="Aldo Corzo" /></td>
 
-                            <td><input class="form-control" data-bind="value: vr" /></td>
+                            <td><input class="form-control" data-bind="value: vr" placeholder="V" /></td>
 
-                            <td><input class="form-control" data-bind="value: tc" /></td>
-                            <td><input class="form-control" data-bind="value: transp" /></td>
-                            <td><input class="form-control" data-bind="value: obs" /></td>
+                            <td><input class="form-control" data-bind="value: tc" placeholder="TC" /></td>
+                            <td><input class="form-control" data-bind="value: transp" placeholder="JAVIER" /></td>
+                            <td><input class="form-control" data-bind="value: obs" placeholder="LIM / CUS" /></td>
 
                             <td>
                                 <a class="btn btn-default" data-bind="click: $root.quitarTransporte">
@@ -322,10 +379,10 @@
 
 </div>
 <div id="contDialogo"></div>
-<button class="btn btn-warning pull-right" onclick="cargarAgencias()">Guardar</button>
+@*<button class="btn btn-warning pull-right" onclick="cargarAgencias()">Guardar</button>*@
 <button class="btn btn-primary pull-right" data-bind="click: enviar">Guardar</button>
-<button class="btn btn-danger pull-right" onclick="actualizarservs()">update</button>
-<button class="btn btn-primary" onclick="window.location.href = '/Files' ">Volver</button>
+@*<button class="btn btn-danger pull-right" onclick="actualizarservs()">update</button>*@
+<button class="btn btn-warning" onclick="window.location.href = '/Files' ">Cancelar</button>
 @*<div>
         <a asp-action="Index">@("Volver")</a>
     </div>*@

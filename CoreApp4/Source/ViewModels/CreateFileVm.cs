@@ -15,7 +15,7 @@ namespace YllariFM.Source.ViewModels
             public string fecha;
             public string ciudad;
             public string servicio;
-            public int idHotel;
+            public string hotel;
             public int pasajeros;
             public string nombrePasajero;
             public int idAgencia;
@@ -44,6 +44,7 @@ namespace YllariFM.Source.ViewModels
         public string codigo;
         public int idBiblia;
         public int idAgencia;
+        public string descripcion;
         public List<ServicioServ> servicios;
         public List<ServicioTransporte> transportes;
 
@@ -57,8 +58,9 @@ namespace YllariFM.Source.ViewModels
         {
             File file = new File();
             file.Codigo = codigo;
-            file.IdBiblia = 1;
-            file.IdAgencia = 1;
+            file.IdBiblia = idBiblia;
+            file.IdAgencia = idAgencia;
+            file.Descripcion = descripcion;
             file.FechaCreacion = DateTime.Now;
 
             List<Servicio> servs= new List<Servicio>();
@@ -69,6 +71,8 @@ namespace YllariFM.Source.ViewModels
                     TipoServicio = Constantes.TipoServicio.Servicio,
                     Nombre = serv.servicio,
                     Ciudad = serv.ciudad,
+                    //Hotel = serv.hotel,
+                    //poner hotel
                     //EsProvincia = Utils.CiudadEsProvincia(serv.ciudad),
                     Pasajeros = serv.pasajeros,
                     NombrePasajero = serv.nombrePasajero,
