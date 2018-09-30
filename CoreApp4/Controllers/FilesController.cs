@@ -10,6 +10,7 @@ using System.Diagnostics;
 using YllariFM.Models.DB;
 using YllariFM.Source;
 using Microsoft.AspNetCore.Http;
+using YllariFM.Source.ViewModels.Vistas.Files;
 
 namespace YllariFM.Controllers
 {
@@ -25,8 +26,30 @@ namespace YllariFM.Controllers
         // GET: Files
         public async Task<IActionResult> Index()
         {
+            /*
             var yllariFMContext = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation);
             return View(await yllariFMContext.ToListAsync());
+            */
+            var files = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation).Include(x=>x.Servicio);
+            List<ListarFilesVm.File> lista = new List<ListarFilesVm.File>();
+            foreach(var fi in files)
+            {
+                ListarFilesVm.File f = new ListarFilesVm.File()
+                {
+                    Agencia = fi.IdAgenciaNavigation.Nombre,
+                    Codigo = fi.Codigo,
+                    Descripcion = fi.Descripcion,
+                    Estado = "Abierto",
+                    FechaCreacion = Utils.formatoFecha(fi.FechaCreacion),
+                    Id = fi.IdFile,
+                    NombreBiblia = Utils.getNombreBiblia(fi.IdBibliaNavigation),
+                    ServiciosServ = fi.Servicio.Where(x=>x.TipoServicio==Constantes.TipoServicio.Servicio && x.IdFile == fi.IdFile).Count(),
+                    ServiciosTransporte = fi.Servicio.Where(x => x.TipoServicio == Constantes.TipoServicio.Transporte && x.IdFile == fi.IdFile).Count()
+                };
+                lista.Add(f);
+            }
+
+            return View(new ListarFilesVm() { Files = lista });
         }
 
         // GET: Files/Details/5
@@ -169,7 +192,7 @@ namespace YllariFM.Controllers
         //===================================================================== api
 
 
-        [Route("Files/Crear")]
+        [Route("api/Files/Crear")]
         [HttpPost]
         public ActionResult Crear([FromBody] CreateFileVm vm)
         {

@@ -133,7 +133,7 @@
 
             self.enviar = function () {
                 $.ajax({
-                    url: 'Crear',
+                    url: '/api/files/Crear',
                     cache: false,
                     type: 'POST',
                     contentType: 'application/json; charset=utf-8',
@@ -211,7 +211,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Codigo *</label>
-                            <input class="form-control" type="text" data-bind="value: codigo" placeholder="08-010" />
+                            <input class="form-control" type="text" data-bind="value: codigo" placeholder="08-010"/>
                         </div>
                         <div class="form-group">
                             <label>Biblia *</label>
@@ -336,7 +336,7 @@
                     </thead>
                     <tbody data-bind="foreach: transportes">
                         <tr>
-                            <td><input type="date" class="form-control" data-bind="value: fecha" /></td>
+                            <td><input type="date" class="form-control" data-bind="value: fecha"/></td>
                             <td><input class="form-control" data-bind="value: ciudad" placeholder="Lima" /></td>
                             @*
                                 <td>
@@ -382,7 +382,7 @@
 @*<button class="btn btn-warning pull-right" onclick="cargarAgencias()">Guardar</button>*@
 <button class="btn btn-primary pull-right" data-bind="click: enviar">Guardar</button>
 @*<button class="btn btn-danger pull-right" onclick="actualizarservs()">update</button>*@
-<button class="btn btn-warning" onclick="window.location.href = '/Files' ">Cancelar</button>
+<button class="btn btn-default" onclick="window.location.href = '/Files' ">Cancelar</button>
 @*<div>
         <a asp-action="Index">@("Volver")</a>
     </div>*@

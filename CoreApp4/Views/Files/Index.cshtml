@@ -1,54 +1,135 @@
-﻿@model IEnumerable<CoreApp4.Models.DB.File>
+﻿@*@model IEnumerable<YllariFM.Models.DB.File>*@
+
+@model YllariFM.Source.ViewModels.Vistas.Files.ListarFilesVm
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Files";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+@section head3{
 
-<p>
-    <a asp-action="Crear">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Codigo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Descripcion)
-                </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdAgenciaNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdBibliaNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Codigo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdAgenciaNavigation.CorreoContacto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdBibliaNavigation.IdBiblia)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdFile">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdFile">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdFile">Delete</a>
-            </td>
-        </tr>
+    <link rel="stylesheet" href="~/theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 }
-    </tbody>
-</table>
+
+@section tail2{
+    <script src="~/theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+}
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('#tabla1').DataTable();
+        });
+        /*
+        function borrar(idEntidad, idModal) {
+            console.log("asd!");
+        }*/
+
+    </script>
+
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Files</h2>
+
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="row">
+                    <span class="col-md-12">
+                        <table class="table table-hover dataTable" id="tabla1">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Codigo
+                                    </th>
+                                    <th>
+                                        Descripcion
+                                    </th>
+                                    <th>
+                                        Biblia
+                                    </th>
+                                    <th>
+                                        Agencia
+                                    </th>
+                                    <th>
+                                        Estado
+                                    </th>
+                                    <th>
+                                        Cant servicios
+                                    </th>
+                                    <th>
+                                        Cant transportes
+                                    </th>
+                                    <th>Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Files)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Codigo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Descripcion)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NombreBiblia)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Agencia)
+                                        </td>
+                                        <td>
+                                            <span class="label label-warning">
+                                                @Html.DisplayFor(modelItem => item.Estado)
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if (item.ServiciosServ == 0)
+                                            {
+                                                <i class="fa fa-ban"></i>
+                                            }
+                                            else
+                                            {
+                                                <span @*class="label label-default"*@>@Html.DisplayFor(modelItem => item.ServiciosServ)</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.ServiciosTransporte == 0)
+                                            {
+                                                <i class="fa fa-ban"></i>
+                                            }
+                                            else
+                                            {
+                                                <span>@Html.DisplayFor(modelItem => item.ServiciosTransporte)</span>
+                                            }
+                                        </td>
+
+
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-default">
+                                                <span class="fa fa-pencil"></span>
+                                            </a>
+                                            @*
+                                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="fa fa-transgender-alt">Delete</a>
+                                            *@
+
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-default">
+                                                <span class="fa fa-trash-o"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn bg-navy" onclick="window.location.href='/Home/Index'">Inicio</button>
+        <button type="button" class="btn btn-success pull-right" onclick="window.location.href='/Files/Crear'">Crear File</button>
+    </div>
+</div>

@@ -78,5 +78,11 @@ namespace YllariFM.Source
         {
             return DateTime.UtcNow.Subtract(new TimeSpan(5, 0, 0));
         }
+
+        public static string formatoFecha( DateTime date)
+        {
+            string fecha = date.Day+"-"+MesIntATexto(date.Month)+" "+date.Hour+":"+date.Minute;
+            return fecha;
+        }
     }
 }
