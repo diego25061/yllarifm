@@ -5,8 +5,8 @@ namespace YllariFM.Models.DB
 {
     public partial class Hotel
     {
-        public string Nombre { get; set; }
         public int IdHotel { get; set; }
-        public int Estrellas { get; set; }
+        public string Nombre { get; set; }
+        public byte? Estrellas { get; set; }
     }
 }

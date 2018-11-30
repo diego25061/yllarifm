@@ -11,9 +11,9 @@ namespace CoreApp4.Controllers
 {
     public class AgenciasController : Controller
     {
-        private readonly YllariFMContext _context;
+        private readonly YllariFmContext _context;
         
-        public AgenciasController(YllariFMContext context)
+        public AgenciasController(YllariFmContext context)
         {
             _context = context;
         }

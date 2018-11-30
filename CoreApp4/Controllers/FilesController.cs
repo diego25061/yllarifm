@@ -16,9 +16,9 @@ namespace YllariFM.Controllers
 {
     public class FilesController : BaseController
     {
-        private readonly YllariFMContext _context;
+        private readonly YllariFmContext _context;
 
-        public FilesController(YllariFMContext context)
+        public FilesController(YllariFmContext context)
         {
             _context = context;
         }
@@ -27,8 +27,8 @@ namespace YllariFM.Controllers
         public async Task<IActionResult> Index()
         {
             /*
-            var yllariFMContext = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation);
-            return View(await yllariFMContext.ToListAsync());
+            var YllariFmContext = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation);
+            return View(await YllariFmContext.ToListAsync());
             */
             var files = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation).Include(x=>x.Servicio);
             List<ListarFilesVm.File> lista = new List<ListarFilesVm.File>();
@@ -98,8 +98,8 @@ namespace YllariFM.Controllers
             return View(file);
         }
 
-        // GET: Files/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Files/Actualizar/5
+        public async Task<IActionResult> Actualizar(int? id)
         {
             if (id == null)
             {
@@ -111,10 +111,16 @@ namespace YllariFM.Controllers
             {
                 return NotFound();
             }
+            /*
             ViewData["IdAgencia"] = new SelectList(_context.Agencia, "IdAgencia", "CorreoContacto", file.IdAgencia);
             ViewData["IdBiblia"] = new SelectList(_context.Biblia, "IdBiblia", "IdBiblia", file.IdBiblia);
             return View(file);
+            */
+            return View(id.Value);
         }
+
+
+
 
         // POST: Files/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -201,7 +207,7 @@ namespace YllariFM.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    //YllariFMContext context = new YllariFMContext();
+                    //YllariFmContext context = new YllariFmContext();
                     File file = vm.toDbFile();
                     _context.File.Add(file);
                     _context.SaveChanges();
@@ -231,40 +237,80 @@ namespace YllariFM.Controllers
         [Route("Files")]
         public ActionResult Listar()
         {
-            var yllariFMContext = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation);
-            return View("Index", yllariFMContext.ToListAsync());
+            var YllariFmContext = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation);
+            return View("Index", YllariFmContext.ToListAsync());
         }*/
 
-        [Route("Files/{id}")]
-        public ActionResult Detalles(int id)
+        [Route("api/Files/{id}")]
+        public JsonResult Detalles(int id)
         {
-            return View();
+            var file = _context.File.Include(x=>x.Servicio).Where(x => x.IdFile == id).FirstOrDefault();
+            if (file == null)
+            {
+                return Json(CrearContRespuestaTransaccion("", "File no encontrado"), StatusCodes.Status404NotFound);
+            }
+
+            var fileResultante = CreateFileVm.fromDb(file);
+            return Json(fileResultante);
+
+            
         }
 
-        [Route("Files/Editar/{id}")]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+        [Route("api/Files/actualizar/{id}")]
         public ActionResult Editar(int id)
         {
             return View();
-        }
+        }*/
 
-        [Route("Files/Editar/{id}")]
-        public ActionResult Editar(int id, CreateFileVm vm)
+
+
+        //TODO ARREGLAR ESTA WA
+        [Route("api/Files/actualizar/{id}")]
+        public ActionResult Editar(int id, [FromBody]CreateFileVm vm)
         {
-            var context = new YllariFMContext();
+            //var context = new YllariFmContext();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var actual = context.File.Where(x => x.IdFile == id).FirstOrDefault();
-                    actual = vm.toDbFile();
-                    context.SaveChanges();
+                    var actual = _context.File.Where(x => x.IdFile == id).FirstOrDefault();
+                    var editado = vm.toDbFile();
+                    //editando campos
+                    actual.Descripcion = editado.Descripcion;
+                    actual.IdAgencia = editado.IdAgencia;
+                    actual.IdBiblia = editado.IdBiblia;
+                    actual.Servicio = editado.Servicio;
+                    //-------
+                    _context.SaveChanges();
                     Debug.WriteLine("Objeto grabado");
                     return Json("success");
                 }
-                catch
+                catch(Exception ex)
                 {
                     Debug.WriteLine("Error");
-                    return Json("error");
+                    return Json("error " + ex.Message);
                 }
             }
             else

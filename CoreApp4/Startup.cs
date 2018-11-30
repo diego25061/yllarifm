@@ -21,7 +21,7 @@ namespace CoreApp4
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddDbContext<YllariFMContext>(options => options.UseSqlServer(Configuration.GetConnectionString("YllariFMDatabase")));
+            services.AddDbContext<YllariFmContext>(options => options.UseSqlServer(Configuration.GetConnectionString("YllariFmDb")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

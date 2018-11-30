@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CoreApp4.Models.DB.Servicio>
+﻿@model IEnumerable<YllariFM.Models.DB.Servicio>
 
 @{
     ViewData["Title"] = "Index";
@@ -21,9 +21,6 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EsProvincia)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.HoraRecojo)
@@ -66,9 +63,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EsProvincia)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.HoraRecojo)

@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using YllariFM.Controllers;
 using YllariFM.Models.DB;
 using YllariFM.Source;
+using YllariFM.Source.ViewModels.Vistas.Files;
 
 namespace CoreApp4.Controllers
 {
-    public class BibliasController : Controller
+    public class BibliasController : BaseController
     {
-        private readonly YllariFMContext _context;
+        private readonly YllariFmContext _context;
 
-        public BibliasController(YllariFMContext context)
+        public BibliasController(YllariFmContext context)
         {
             _context = context;
         }
@@ -22,7 +25,7 @@ namespace CoreApp4.Controllers
         // GET: Biblias
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Biblia.ToListAsync());
+            return View(await _context.Biblia.OrderByDescending(x=> x.Anho ).ToListAsync());
         }
 
         // GET: Biblias/Details/5
@@ -150,6 +153,18 @@ namespace CoreApp4.Controllers
             return _context.Biblia.Any(e => e.IdBiblia == id);
         }
 
+        [Route("biblias/{id}")]
+        public ActionResult detalleBiblia(int id)
+        {
+            var biblia = _context.Biblia.Where(x => x.IdBiblia == id).FirstOrDefault();
+            DateTime date = DateTime.Now;
+            if (biblia != null)
+                date = new DateTime(biblia.Anho, biblia.Mes, 1);
+
+            DetalleBibliaVm vm = new DetalleBibliaVm();
+            vm.Fecha = Utils.datetimeAString(date);
+            return View("detalle", vm);
+        }
 
         //===================================================================== api
 
@@ -157,11 +172,11 @@ namespace CoreApp4.Controllers
         public JsonResult listaBiblias()
         {
             var lista = _context.Biblia.ToList();
-            lista.OrderByDescending(x => Convert.ToInt16(x.Anho.ToString("0000" +""+ x.Mes.ToString("00"))));
+            lista.OrderByDescending(x => Convert.ToInt16(x.Anho.ToString("0000" + "" + x.Mes.ToString("00"))));
             List<object> respuesta = new List<object>();
-            foreach(var b in lista)
+            foreach (var b in lista)
             {
-                respuesta.Add(new { id = b.IdBiblia , nombre = Utils.getNombreBiblia(b)});
+                respuesta.Add(new { id = b.IdBiblia, nombre = Utils.getNombreBiblia(b) });
             }
             return Json(respuesta);
         }
@@ -178,5 +193,54 @@ namespace CoreApp4.Controllers
                 mes,anho,fechaPeruana=Utils.fechaPeruanaActual()
             });
         }*/
+
+
+        [Route("api/Biblias/Servicios/Eventos")]
+        public JsonResult eventosServiciosServs([FromQuery(Name = "start")] string fechaInicio, [FromQuery(Name = "end")]string fechaFin)
+        {
+            if (fechaInicio == null)
+                return Json("Fecha inicial no especificada", StatusCodes.Status400BadRequest);
+            if (fechaFin == null)
+                return Json("Fecha final no especificada", StatusCodes.Status400BadRequest);
+
+            DateTime desde = DateTime.Parse(fechaInicio);
+            DateTime hasta = DateTime.Parse(fechaFin);
+            var servicios = _context.Servicio.Where(x => x.Fecha > desde && x.Fecha < hasta && x.TipoServicio == Constantes.TipoServicio.Servicio);
+            List<object> rpta = new List<object>();
+            foreach (var s in servicios)
+            {
+                rpta.Add(new
+                {
+                    title = s.Nombre,
+                    start = s.Fecha,
+                    url = "api/servicios/" + s.IdServicio
+                });
+            }
+            return Json(rpta);
+        }
+
+        [Route("api/Biblias/Transportes/Eventos")]
+        public JsonResult eventosServiciosTransporte([FromQuery(Name = "start")] string fechaInicio, [FromQuery(Name = "end")]string fechaFin)
+        {
+            if (fechaInicio == null)
+                return Json("Fecha inicial no especificada", StatusCodes.Status400BadRequest);
+            if (fechaFin == null)
+                return Json("Fecha final no especificada", StatusCodes.Status400BadRequest);
+
+            DateTime desde = DateTime.Parse(fechaInicio);
+            DateTime hasta = DateTime.Parse(fechaFin);
+            var servicios = _context.Servicio.Where(x => x.Fecha > desde && x.Fecha < hasta && x.TipoServicio == Constantes.TipoServicio.Transporte);
+            List<object> rpta = new List<object>();
+            foreach (var s in servicios)
+            {
+                rpta.Add(new
+                {
+                    title = s.Nombre,
+                    start = s.Fecha,
+                    url = "api/transportes/" + s.IdServicio
+                });
+            }
+            return Json(rpta);
+        }
     }
 }

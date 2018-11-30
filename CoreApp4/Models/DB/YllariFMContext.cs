@@ -4,37 +4,33 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace YllariFM.Models.DB
 {
-    public partial class YllariFMContext : DbContext
+    public partial class YllariFmContext : DbContext
     {
         public virtual DbSet<Agencia> Agencia { get; set; }
         public virtual DbSet<Biblia> Biblia { get; set; }
         public virtual DbSet<Ciudad> Ciudad { get; set; }
         public virtual DbSet<File> File { get; set; }
         public virtual DbSet<Hotel> Hotel { get; set; }
-        public virtual DbSet<Orden> Orden { get; set; }
-        public virtual DbSet<Pasajero> Pasajero { get; set; }
         public virtual DbSet<Proveedor> Proveedor { get; set; }
         public virtual DbSet<Servicio> Servicio { get; set; }
+
+        public YllariFmContext() {
+        }
+        // Unable to generate entity type for table 'dbo.Pasajero'. Please see the warning messages.
+        // Unable to generate entity type for table 'dbo.Orden'. Please see the warning messages.
+
+
+        public YllariFmContext(DbContextOptions<YllariFmContext> options): base(options) { }
         /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer(@"Data Source=serdc.database.windows.net;Initial Catalog=YllariFM;User=serdc;Password=123456Upc");
+                #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-QF5QV5P\SQLEXPRESS;Initial Catalog=YllariFm;Trusted_Connection=True;");
             }
         }
         */
-
-
-        public YllariFMContext()
-        {
-        }
-
-        public YllariFMContext(DbContextOptions<YllariFMContext> options)
-            : base(options)
-        {
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,8 +38,11 @@ namespace YllariFM.Models.DB
             {
                 entity.HasKey(e => e.IdAgencia);
 
+                entity.Property(e => e.IdAgencia).ValueGeneratedNever();
+
                 entity.Property(e => e.Ciudad)
-                    .HasMaxLength(50)
+                    .IsRequired()
+                    .HasMaxLength(150)
                     .IsUnicode(false);
 
                 entity.Property(e => e.CorreoContacto)
@@ -61,6 +60,7 @@ namespace YllariFM.Models.DB
                     .IsUnicode(false);
 
                 entity.Property(e => e.Pais)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
@@ -69,9 +69,7 @@ namespace YllariFM.Models.DB
             {
                 entity.HasKey(e => e.IdBiblia);
 
-                entity.HasIndex(e => new { e.Anho, e.Mes })
-                    .HasName("IX_Biblia")
-                    .IsUnique();
+                entity.Property(e => e.IdBiblia).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Ciudad>(entity =>
@@ -80,11 +78,10 @@ namespace YllariFM.Models.DB
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
-                    .HasMaxLength(80)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Pais)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
@@ -92,6 +89,8 @@ namespace YllariFM.Models.DB
             modelBuilder.Entity<File>(entity =>
             {
                 entity.HasKey(e => e.IdFile);
+
+                entity.Property(e => e.IdFile).ValueGeneratedNever();
 
                 entity.Property(e => e.Codigo)
                     .IsRequired()
@@ -123,22 +122,7 @@ namespace YllariFM.Models.DB
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
-                    .HasMaxLength(120)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<Orden>(entity =>
-            {
-                entity.HasKey(e => e.IdOrden);
-            });
-
-            modelBuilder.Entity<Pasajero>(entity =>
-            {
-                entity.HasKey(e => e.IdPasajero);
-
-                entity.Property(e => e.Nombre)
-                    .IsRequired()
-                    .HasMaxLength(150)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 
@@ -146,9 +130,10 @@ namespace YllariFM.Models.DB
             {
                 entity.HasKey(e => e.IdProveedor);
 
+                entity.Property(e => e.IdProveedor).ValueGeneratedNever();
+
                 entity.Property(e => e.Nombre)
-                    .IsRequired()
-                    .HasMaxLength(75)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoProveedor)
@@ -159,6 +144,8 @@ namespace YllariFM.Models.DB
             modelBuilder.Entity<Servicio>(entity =>
             {
                 entity.HasKey(e => e.IdServicio);
+
+                entity.Property(e => e.IdServicio).ValueGeneratedNever();
 
                 entity.Property(e => e.Alm)
                     .HasColumnName("ALM")
@@ -171,9 +158,11 @@ namespace YllariFM.Models.DB
 
                 entity.Property(e => e.Fecha).HasColumnType("datetime");
 
+                entity.Property(e => e.Hotel).HasColumnType("nchar(10)");
+
                 entity.Property(e => e.Nombre)
                     .IsRequired()
-                    .HasMaxLength(150)
+                    .HasMaxLength(250)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NombrePasajero)
@@ -194,7 +183,7 @@ namespace YllariFM.Models.DB
                     .HasMaxLength(5)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Transp)
+                entity.Property(e => e.Transporte)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 

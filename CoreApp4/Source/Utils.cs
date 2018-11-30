@@ -15,7 +15,7 @@ namespace YllariFM.Source
             return false;
         }
 
-        public static DateTime strinFechagADatetime(string horaFecha)
+        public static DateTime stringFechaADatetime(string horaFecha)
         {
             int anho = Convert.ToInt32(horaFecha.Split('-')[0]);
             int mes = Convert.ToInt32(horaFecha.Split('-')[1]);
@@ -23,11 +23,20 @@ namespace YllariFM.Source
             return new DateTime(anho,mes,dia);
         }
 
+
+        public static string datetimeAString(DateTime fecha)
+        {
+            return fecha.ToString("yyyy-MM-dd");
+        }
+
         public static TimeSpan stringHoraATime(string hora)
         {
             return new DateTime(2000, 1, 1, Convert.ToInt32(hora.Split(':')[0]), Convert.ToInt32(hora.Split(':')[1]), 0).TimeOfDay;
         }
 
+        public static string timespanAStringHora(TimeSpan time){
+            return time.Hours + ":" + time.Minutes;
+        }
 
         public static string GetFullMensajeExcepcion(Exception ex)
         {
@@ -78,6 +87,7 @@ namespace YllariFM.Source
         {
             return DateTime.UtcNow.Subtract(new TimeSpan(5, 0, 0));
         }
+
 
         public static string formatoFecha( DateTime date)
         {

@@ -9,9 +9,9 @@ namespace CoreApp4.Controllers
 {
     public class ServiciosController : Controller
     {
-        private readonly YllariFMContext _context;
+        private readonly YllariFmContext _context;
 
-        public ServiciosController(YllariFMContext context)
+        public ServiciosController(YllariFmContext context)
         {
             _context = context;
         }
@@ -19,8 +19,8 @@ namespace CoreApp4.Controllers
         // GET: Servicios
         public async Task<IActionResult> Index()
         {
-            var yllariFMContext = _context.Servicio.Include(s => s.IdFileNavigation).Include(s => s.IdProveedorNavigation);
-            return View(await yllariFMContext.ToListAsync());
+            var YllariFmContext = _context.Servicio.Include(s => s.IdFileNavigation).Include(s => s.IdProveedorNavigation);
+            return View(await YllariFmContext.ToListAsync());
         }
 
         // GET: Servicios/Details/5

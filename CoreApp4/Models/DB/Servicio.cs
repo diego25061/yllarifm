@@ -22,7 +22,8 @@ namespace YllariFM.Models.DB
         public string NombrePasajero { get; set; }
         public string Tren { get; set; }
         public string Alm { get; set; }
-        public string Transp { get; set; }
+        public string Transporte { get; set; }
+        public string Hotel { get; set; }
 
         public File IdFileNavigation { get; set; }
         public Proveedor IdProveedorNavigation { get; set; }

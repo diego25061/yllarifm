@@ -50,7 +50,7 @@
                 ko.mapping.fromJS(data, {}, vm.agencias);
             }).fail(function (data) {
                 var msj = data.responseJSON;
-                dr_mostrarDialogo("contDialogo", "ERROR AL CARGAR AGENCIAS: "+ msj, "danger");
+                dr_mostrarDialogo("contDialogo", "ERROR AL CARGAR AGENCIAS: " + msj.msjError, "danger");
             });
         }
 
@@ -60,7 +60,7 @@
                 ko.mapping.fromJS(data, {}, vm.biblias);
             }).fail(function (data) {
                 var msj = data.responseJSON;
-                dr_mostrarDialogo("contDialogo", "ERROR AL CARGAR BIBLIAS: " + msj, "danger");
+                dr_mostrarDialogo("contDialogo", "ERROR AL CARGAR BIBLIAS: " + msj.msjError, "danger");
             });;
         }
         @*
@@ -87,7 +87,7 @@
                 console.log("ciudades: " + vm.ciudades.length);*/
             });
         }*@
-        function Transporte(fecha, ciudad, horaRecojo, horaSalida, vuelo, servicio, pasajeros, nombrePax, vr,  tc, transp, obs) {
+        function Transporte(fecha, ciudad, horaRecojo, horaSalida, vuelo, servicio, pasajeros, nombrePasajero, vr,  tc, transp, obs) {
             var self = this;
             self.fecha = ko.observable(fecha);
             self.ciudad = ko.observable(ciudad);
@@ -96,7 +96,7 @@
             self.vuelo = ko.observable(vuelo);
             self.servicio = ko.observable(servicio);
             self.pasajeros = ko.observable(pasajeros);
-            self.nombrePax = ko.observable(nombrePax);
+            self.nombrePasajero = ko.observable(nombrePasajero);
             self.vr = ko.observable(vr);
             //self.agencia = ko.observable(agencia);
             self.tc = ko.observable(tc);
@@ -104,14 +104,14 @@
             self.obs = ko.observable(obs);
         }
 
-        function Servicio(fecha, ciudad, servicio, hotel, pasajeros, nombrePax,  tren, alm, obs) {
+        function Servicio(fecha, ciudad, servicio, hotel, pasajeros, nombrePasajero,  tren, alm, obs) {
             var self = this;
             self.fecha = ko.observable(fecha);
             self.ciudad = ko.observable(ciudad);
             self.servicio = ko.observable(servicio);
             self.hotel = ko.observable(hotel);
             self.pasajeros = ko.observable(pasajeros);
-            self.nombrePax = ko.observable(nombrePax);
+            self.nombrePasajero = ko.observable(nombrePasajero);
             //self.agencia = ko.observable(agencia);
             self.tren = ko.observable(tren);
             self.alm = ko.observable(alm);
@@ -180,7 +180,7 @@
 
             self.agregarServicio = function () {
                 self.servicios.push(
-                    { fecha: "", ciudad: "", servicio: "", hotel: "", pasajeros: null, nombrePax: "", /*agencia: 1,*/ tren: "", alm: "", obs: "" }
+                    { fecha: "", ciudad: "", servicio: "", hotel: "", pasajeros: null, nombrePasajero: "", /*agencia: 1,*/ tren: "", alm: "", obs: "" }
                 );
             };
             self.quitarServicio = function (serv) {
@@ -188,7 +188,7 @@
             };
             self.agregarTransporte = function () {
                 self.transportes.push(
-                    { fecha: "", ciudad: 1, horaRecojo: "0", horaSalida: "00", vuelo: "", servicio: "", pasajeros: null, nombrePax: "", vr: "", /*agencia: "",*/ tc: "", transp: "", obs: "" }
+                    { fecha: "", ciudad: "", horaRecojo: "0", horaSalida: "00", vuelo: "", servicio: "", pasajeros: null, nombrePasajero: "", vr: "", /*agencia: "",*/ tc: "", transp: "", obs: "" }
                 );
             };
             self.quitarTransporte = function (trans) {
@@ -289,7 +289,7 @@
                                 </td>
                             *@
                             <td><input class="form-control" type="number" data-bind="value: pasajeros" placeholder="2" /></td>
-                            <td><input class="form-control" data-bind="value: nombrePax" placeholder="Christian Cueva" /></td>
+                            <td><input class="form-control" data-bind="value: nombrePasajero" placeholder="Christian Cueva" /></td>
 
                             <td><input class="form-control" data-bind="value: tren" placeholder="EXP" /></td>
                             <td><input class="form-control" data-bind="value: alm" placeholder="AYASQA" /></td>
@@ -350,8 +350,8 @@
                             <td><input type="time" class="form-control" data-bind="value: horaSalida" /></td>
                             <td><input class="form-control" data-bind="value: vuelo" placeholder="LA 2009" /></td>
                             <td><input class="form-control" data-bind="value: servicio" placeholder="APTO / CROWNE PLAZA" /></td>
-                            <td><input class="form-control" data-bind="value: pasajeros" placeholder="2" /></td>
-                            <td><input class="form-control" data-bind="value: nombrePax" placeholder="Aldo Corzo" /></td>
+                            <td><input type="number" class="form-control" data-bind="value: pasajeros" placeholder="2" /></td>
+                            <td><input class="form-control" data-bind="value: nombrePasajero" placeholder="Aldo Corzo" /></td>
 
                             <td><input class="form-control" data-bind="value: vr" placeholder="V" /></td>
 

@@ -10,8 +10,8 @@ namespace YllariFM.Models.DB
             Servicio = new HashSet<Servicio>();
         }
 
-        public string Codigo { get; set; }
         public int IdFile { get; set; }
+        public string Codigo { get; set; }
         public int IdBiblia { get; set; }
         public string Descripcion { get; set; }
         public int IdAgencia { get; set; }

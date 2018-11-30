@@ -1,0 +1,115 @@
+﻿@model YllariFM.Source.ViewModels.Vistas.Files.DetalleBibliaVm
+
+@{
+    ViewData["Title"] = "Files";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section head3{
+
+    <link rel="stylesheet" href="~/theme/bower_components/fullcalendar-3.9.0/fullcalendar.min.css">
+    <link rel="stylesheet" href="~/theme/bower_components/fullcalendar-3.9.0/fullcalendar.print.min.css" media="print">
+}
+
+@section scripts{
+
+    <script src="~/theme/bower_components/moment/moment.js"></script>
+    <script src="~/theme/bower_components/fullcalendar-3.9.0/fullcalendar.min.js"></script>
+    <script src="~/theme/bower_components/fullcalendar-3.9.0/locale/es.js"></script>
+    <script>
+        $(document).ready(function () {
+            //console.log("height: " + window.innerHeight);
+
+            $('#calendario').fullCalendar({
+                // put your options and callbacks here
+                locale: "es",
+                header: {
+                    left: 'title',
+                    center: '',
+                    right: 'today prev,next'
+                },
+                titleFormat: 'MMMM YYYY',
+                aspectRatio: 2,
+                windowResizeDelay: 5,
+
+                showNonCurrentDates: false,
+
+                columnHeaderFormat: 'dddd',
+                firstDay: 1,
+                defaultDate: '@(Model.Fecha)',
+                events: [
+                    {
+                        title: "TRANSPORTE LIMA/CUZCO ETC",
+                        start: "2018-10-04",
+                        url: '/servicio/238'
+                    },
+                    {
+
+                        title: "Ir a google!",
+                        start: "2018-10-06",
+                        url: 'http://www.google.com'
+
+                    }
+
+                ],
+
+                navLinks: true,
+                navLinkDayClick: function (date, jsEvent) {
+                    console.log('day', date.format()); // date is a moment
+                    window.location.href = '/servicios/fecha/' + date.format();
+                },
+
+
+                eventSources: [
+
+                    // your event source
+                    {
+                        url: '/api/biblias/transportes/eventos',
+                        error: function () {
+                            alert('there was an error while fetching events!');
+                        },
+                        color: 'green',   // a non-ajax option
+                        textColor: 'white' // a non-ajax option
+                    },
+
+                    // any other sources...
+
+                    {
+                        url: '/api/biblias/servicios/eventos',
+
+                        error: function () {
+                            alert('there was an error while fetching events!');
+                        },
+                        color: 'orange',   // a non-ajax option
+                        textColor: 'white' // a non-ajax option
+                    }
+
+                ]
+
+                /*
+                dayClick: function (date, jsEvent, view) {
+
+                    console.log('Clicked on date: ' + date);
+                    // change the day's background color just for fun
+
+                }*/
+                /*
+                height: function () {
+                    //console.log("h: " + window.innerHeight);
+                    return window.innerHeight > 900 ? 900 : window.innerHeight;
+                }*/
+
+            })
+        });
+
+    </script>
+}
+
+<h2>Calendario / Visualizador Biblias</h2>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-solid">
+            <div id="calendario"></div>
+        </div>
+    </div>
+</div>

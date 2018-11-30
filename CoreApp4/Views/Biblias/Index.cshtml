@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CoreApp4.Models.DB.Biblia>
+﻿@model IEnumerable<YllariFM.Models.DB.Biblia>
 
 @{
     ViewData["Title"] = "Index";
@@ -33,7 +33,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdBiblia">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdBiblia">Details</a> |
+                <a asp-action="@item.IdBiblia" asp-route-id="">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.IdBiblia">Delete</a>
             </td>
         </tr>

@@ -110,7 +110,7 @@
 
 
                                         <td>
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-default">
+                                            <a asp-action="Actualizar" asp-route-id="@item.Id" class="btn btn-default">
                                                 <span class="fa fa-pencil"></span>
                                             </a>
                                             @*
@@ -129,7 +129,7 @@
                 </div>
             </div>
         </div>
-        <button type="button" class="btn bg-navy" onclick="window.location.href='/Home/Index'">Inicio</button>
-        <button type="button" class="btn btn-success pull-right" onclick="window.location.href='/Files/Crear'">Crear File</button>
+        <button type="button" class="btn btn-default" onclick="window.location.href='/Home/Index'">Ir al inicio</button>
+        <button type="button" class="btn btn-primary pull-right" onclick="window.location.href='/Files/Crear'">Crear File</button>
     </div>
 </div>

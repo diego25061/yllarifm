@@ -8,9 +8,9 @@ namespace CoreApp4.Controllers
 {
     public class ProveedorsController : Controller
     {
-        private readonly YllariFMContext _context;
+        private readonly YllariFmContext _context;
 
-        public ProveedorsController(YllariFMContext context)
+        public ProveedorsController(YllariFmContext context)
         {
             _context = context;
         }
