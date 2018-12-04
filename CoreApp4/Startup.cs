@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using YllariFM.Models.DB;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using YllariFM.Source.ViewModels.Api;
 
 namespace CoreApp4
 {
@@ -13,6 +15,15 @@ namespace CoreApp4
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            configurarMapper();
+        }
+
+        public void configurarMapper() {
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Agencia, AgenciaDto>();
+                cfg.CreateMap<GrabarAgenciaDto, Agencia>();
+            });
         }
 
         public IConfiguration Configuration { get; }

@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using YllariFM.Models.DB;
 
-namespace CoreApp4.Controllers
-{
+namespace CoreApp4.Controllers {
+    [Route("api/reeee/")]
     public class AgenciasController : Controller
     {
         private readonly YllariFmContext _context;

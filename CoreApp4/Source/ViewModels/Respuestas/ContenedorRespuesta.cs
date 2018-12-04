@@ -18,7 +18,13 @@ namespace YllariFM.Source.ViewModels
             this.MsjError = error;
         }
 
+        public ContenedorRespuesta(string msj, Exception ex) {
+            this.Contenido = msj;
+            this.MsjError = ex.Message;
+        }
+
         public string Contenido { get; set; }
         public string MsjError { get; set; }
+
     }
 }

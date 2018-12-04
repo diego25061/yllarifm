@@ -24,7 +24,9 @@
             start();
         });
 
-        var vm ;
+        var vm;
+        var vmAgencia;
+        var vmBiblia;
 
         /*
         function actualizarservs() {
@@ -44,6 +46,21 @@
             ko.applyBindings(vm);
         }
 
+        function crearBibliaOnFly() {
+            $.post("/api/agencias/crear", ko.toJSON(), function (data) {
+
+            }).fail(function (data) {
+                var msj = data.responseJSON;
+                alert("Error al crear agencia: " + msj.msjError);
+            }).success(function () {
+                alert("Agencia creada");
+            });
+        }
+
+        function crearAgenciaOnFly() {
+            $
+        }
+
 
         function cargarAgencias() {
             $.getJSON("/api/agencias", function (data) {
@@ -61,7 +78,7 @@
             }).fail(function (data) {
                 var msj = data.responseJSON;
                 dr_mostrarDialogo("contDialogo", "ERROR AL CARGAR BIBLIAS: " + msj.msjError, "danger");
-            });;
+            });
         }
         @*
         function cargarAgencias() {
@@ -87,37 +104,6 @@
                 console.log("ciudades: " + vm.ciudades.length);*/
             });
         }*@
-        function Transporte(fecha, ciudad, horaRecojo, horaSalida, vuelo, servicio, pasajeros, nombrePasajero, vr,  tc, transp, obs) {
-            var self = this;
-            self.fecha = ko.observable(fecha);
-            self.ciudad = ko.observable(ciudad);
-            self.horaRecojo = ko.observable(horaRecojo);
-            self.horaSalida = ko.observable(horaSalida);
-            self.vuelo = ko.observable(vuelo);
-            self.servicio = ko.observable(servicio);
-            self.pasajeros = ko.observable(pasajeros);
-            self.nombrePasajero = ko.observable(nombrePasajero);
-            self.vr = ko.observable(vr);
-            //self.agencia = ko.observable(agencia);
-            self.tc = ko.observable(tc);
-            self.transp = ko.observable(transp);
-            self.obs = ko.observable(obs);
-        }
-
-        function Servicio(fecha, ciudad, servicio, hotel, pasajeros, nombrePasajero,  tren, alm, obs) {
-            var self = this;
-            self.fecha = ko.observable(fecha);
-            self.ciudad = ko.observable(ciudad);
-            self.servicio = ko.observable(servicio);
-            self.hotel = ko.observable(hotel);
-            self.pasajeros = ko.observable(pasajeros);
-            self.nombrePasajero = ko.observable(nombrePasajero);
-            //self.agencia = ko.observable(agencia);
-            self.tren = ko.observable(tren);
-            self.alm = ko.observable(alm);
-            self.obs = ko.observable(obs);
-        }
-
 
         function FileViewModel() {
             var self = this;
@@ -130,7 +116,6 @@
 
                 console.log("servicios: " + ko.toJSON(this));
             };
-
             self.enviar = function () {
                 $.ajax({
                     url: '/api/files/Crear',
