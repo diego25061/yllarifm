@@ -13,7 +13,7 @@ namespace YllariFM.Source.ViewModels.Api {
         public string Ciudad { get; set; }
     }
 
-    public class GrabarAgenciaDto {
+    public class ActualizarAgenciaDto {
         public string Nombre { get; set; }
         public string CorreoContacto { get; set; }
         public string CorreoExtra { get; set; }

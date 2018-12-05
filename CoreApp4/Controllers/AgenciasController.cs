@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using YllariFM.Models.DB;
 
 namespace CoreApp4.Controllers {
-    [Route("api/reeee/")]
+    //[Route("api/reeee/")]
     public class AgenciasController : Controller
     {
         private readonly YllariFmContext _context;
@@ -150,7 +150,7 @@ namespace CoreApp4.Controllers {
             return _context.Agencia.Any(e => e.IdAgencia == id);
         }
 
-
+        /*
         [Route("api/Agencias")]
         public JsonResult ListaSelect()
         {
@@ -162,6 +162,6 @@ namespace CoreApp4.Controllers {
             }
             return Json(objs);
         }
-
+        */
     }
 }

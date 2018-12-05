@@ -21,8 +21,8 @@ namespace CoreApp4
         public void configurarMapper() {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Agencia, AgenciaDto>();
-                cfg.CreateMap<GrabarAgenciaDto, Agencia>();
+                cfg.CreateMap<Agencia, AgenciaDto>().ReverseMap();
+                cfg.CreateMap<ActualizarAgenciaDto, Agencia>().ReverseMap();
             });
         }
 

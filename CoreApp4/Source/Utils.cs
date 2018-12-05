@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using YllariFM.Models.DB;
@@ -14,7 +15,11 @@ namespace YllariFM.Source
                 return true;
             return false;
         }
-
+        /// <summary>
+        /// Formato 1992-10-28
+        /// </summary>
+        /// <param name="horaFecha"></param>
+        /// <returns></returns>
         public static DateTime stringFechaADatetime(string horaFecha)
         {
             int anho = Convert.ToInt32(horaFecha.Split('-')[0]);

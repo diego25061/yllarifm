@@ -287,7 +287,7 @@ namespace YllariFM.Controllers
 
 
         //TODO ARREGLAR ESTA WA
-        [Route("api/Files/actualizar/{id}")]
+        //[Route("api/Files/actualizar/{id}")]
         public ActionResult Editar(int id, [FromBody]CreateFileVm vm)
         {
             //var context = new YllariFmContext();

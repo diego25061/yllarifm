@@ -11,34 +11,20 @@ namespace YllariFM.Models.DB
         public virtual DbSet<Ciudad> Ciudad { get; set; }
         public virtual DbSet<File> File { get; set; }
         public virtual DbSet<Hotel> Hotel { get; set; }
+        public virtual DbSet<Orden> Orden { get; set; }
+        public virtual DbSet<Pasajero> Pasajero { get; set; }
         public virtual DbSet<Proveedor> Proveedor { get; set; }
         public virtual DbSet<Servicio> Servicio { get; set; }
 
         public YllariFmContext() {
         }
-        // Unable to generate entity type for table 'dbo.Pasajero'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.Orden'. Please see the warning messages.
-
-
-        public YllariFmContext(DbContextOptions<YllariFmContext> options): base(options) { }
-        /*
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-QF5QV5P\SQLEXPRESS;Initial Catalog=YllariFm;Trusted_Connection=True;");
-            }
-        }
-        */
+        public YllariFmContext(DbContextOptions<YllariFmContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Agencia>(entity =>
             {
                 entity.HasKey(e => e.IdAgencia);
-
-                entity.Property(e => e.IdAgencia).ValueGeneratedNever();
 
                 entity.Property(e => e.Ciudad)
                     .IsRequired()
@@ -68,8 +54,6 @@ namespace YllariFM.Models.DB
             modelBuilder.Entity<Biblia>(entity =>
             {
                 entity.HasKey(e => e.IdBiblia);
-
-                entity.Property(e => e.IdBiblia).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<Ciudad>(entity =>
@@ -89,8 +73,6 @@ namespace YllariFM.Models.DB
             modelBuilder.Entity<File>(entity =>
             {
                 entity.HasKey(e => e.IdFile);
-
-                entity.Property(e => e.IdFile).ValueGeneratedNever();
 
                 entity.Property(e => e.Codigo)
                     .IsRequired()
@@ -126,11 +108,23 @@ namespace YllariFM.Models.DB
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<Orden>(entity =>
+            {
+                entity.HasKey(e => e.IdOrden);
+            });
+
+            modelBuilder.Entity<Pasajero>(entity =>
+            {
+                entity.HasKey(e => e.IdPasajero);
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(520)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Proveedor>(entity =>
             {
                 entity.HasKey(e => e.IdProveedor);
-
-                entity.Property(e => e.IdProveedor).ValueGeneratedNever();
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(50)
@@ -144,8 +138,6 @@ namespace YllariFM.Models.DB
             modelBuilder.Entity<Servicio>(entity =>
             {
                 entity.HasKey(e => e.IdServicio);
-
-                entity.Property(e => e.IdServicio).ValueGeneratedNever();
 
                 entity.Property(e => e.Alm)
                     .HasColumnName("ALM")

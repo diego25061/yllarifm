@@ -7,7 +7,7 @@ namespace YllariFM.Models.DB
     {
         public int IdOrden { get; set; }
         public int IdServicio { get; set; }
-        public bool? RecordatorioEnviado { get; set; }
-        public bool? Rec2Enviado { get; set; }
+        public bool RecordatorioEnviado { get; set; }
+        public bool Recordatorio2Enviado { get; set; }
     }
 }
