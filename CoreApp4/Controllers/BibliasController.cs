@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YllariFM.Controllers;
 using YllariFM.Models.DB;
 using YllariFM.Source;
+using YllariFM.Source.ViewModels;
 using YllariFM.Source.ViewModels.Vistas.Files;
 
 namespace CoreApp4.Controllers
@@ -23,9 +25,19 @@ namespace CoreApp4.Controllers
         }
 
         // GET: Biblias
-        public async Task<IActionResult> Index()
+        public ActionResult Index()
         {
-            return View(await _context.Biblia.OrderByDescending(x=> x.Anho ).ToListAsync());
+            var biblias = _context.Biblia.ToList();
+            //List<BibliasVms.LeerIndexBibliaDto> lista = Mapper.Map<List<Biblia>, List<BibliasVms.LeerIndexBibliaDto>>(biblias);
+            List<BibliasVms.LeerIndexBibliaDto> lista = new List<BibliasVms.LeerIndexBibliaDto>();
+            foreach (var b in biblias) {
+                lista.Add(new BibliasVms.LeerIndexBibliaDto() {
+                    Anho = b.Anho,
+                    IdBiblia = b.IdBiblia,
+                    Mes = Utils.MesIntATexto(b.Mes)
+                });
+            }
+            return View(lista);
         }
 
         // GET: Biblias/Details/5
@@ -153,7 +165,7 @@ namespace CoreApp4.Controllers
             return _context.Biblia.Any(e => e.IdBiblia == id);
         }
 
-        [Route("biblias/{id}")]
+        [Route("biblias/Ver/{id}")]
         public ActionResult detalleBiblia(int id)
         {
             var biblia = _context.Biblia.Where(x => x.IdBiblia == id).FirstOrDefault();

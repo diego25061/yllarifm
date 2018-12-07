@@ -96,7 +96,7 @@ namespace YllariFM.Source
 
         public static string formatoFecha( DateTime date)
         {
-            string fecha = date.Day+"-"+MesIntATexto(date.Month)+" "+date.Hour+":"+date.Minute;
+            string fecha = date.Day+" "+MesIntATexto(date.Month)+" "+date.Year+" "+date.Hour+":"+date.Minute;
             return fecha;
         }
     }

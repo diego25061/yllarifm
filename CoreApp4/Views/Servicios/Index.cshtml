@@ -1,102 +1,247 @@
-﻿@model IEnumerable<YllariFM.Models.DB.Servicio>
+﻿@model YllariFM.Source.ViewModels.Vistas.LeerServiciosVm
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+@section head3{
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Fecha)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TipoServicio)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.HoraRecojo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.HoraSalida)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Vuelo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Pasajeros)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Vr)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tc)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Observaciones)
-                </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdFileNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdProveedorNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoServicio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HoraRecojo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HoraSalida)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vuelo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pasajeros)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vr)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Observaciones)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdFileNavigation.Codigo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdProveedorNavigation.Nombre)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdServicio">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdServicio">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdServicio">Delete</a>
-            </td>
-        </tr>
+    <link rel="stylesheet" href="~/theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 }
-    </tbody>
-</table>
+
+@section tail2{
+    <script src="~/theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+}
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('#tabla1').DataTable( {
+              "columnDefs": [
+                { "width": "15%", "targets": 0 },
+                { "width": "18%", "targets": 8 }
+              ]
+            } );
+            $('#tabla2').DataTable( {
+                "columnDefs": [
+                { "width": "15%", "targets": 0},
+                { "width": "18%", "targets": 9 }
+                ]
+            } );
+        });
+        /*
+        function borrar(idEntidad, idModal) {
+            console.log("asd!");
+        }*/
+
+    </script>
+
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Servicios </h2>
+
+        <h4>Generales</h4>
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-hover dataTable" id="tabla1">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Nombre
+                                    </th>
+                                    <th>
+                                        File
+                                    </th>
+                                    <th>
+                                        Fecha
+                                    </th>
+                                    <th>
+                                        Ciudad
+                                    </th>
+                                    <th>
+                                        Hotel
+                                    </th>
+                                    <th>
+                                        Cant. Pasajeros
+                                    </th>
+                                    <th>Pasajero</th>
+                                    <th>Proveedor</th>
+                                    <th>Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.servsGenerales) {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Nombre)
+                                        </td>
+                                        <td>
+                                            @*@Html.DisplayFor(modelItem => item.CodigoFile) *@
+                                            @Html.ActionLink(item.CodigoFile, "Details/" + item.IdFile, "Files")
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Fecha)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Ciudad)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Hotel)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CantPasajeros)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NombrePasajero)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Proveedor)
+                                        </td>
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.IdServicio" class="btn btn-default">
+                                                <span class="fa fa-pencil"></span>
+                                            </a>
+
+                                            <a asp-action="Details" asp-route-id="@item.IdServicio" class="btn btn-default">
+                                                <span class="fa fa-eye"></span>
+                                            </a>
+
+                                            <a asp-action="Calendar" asp-route-id="@item.IdServicio" class="btn btn-default">
+                                                <span class="fa fa-calendar-check-o"></span>
+                                            </a>
+
+                                            <a asp-action="Delete" asp-route-id="@item.IdServicio" class="btn btn-danger">
+                                                <span class="fa fa-trash-o"></span>
+                                            </a>
+                                            @*
+        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.Id" class="fa fa-transgender-alt">Delete</a>
+                                            *@
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h4>Transporte</h4>
+
+
+        <div class="box box-solid">
+            <div class="box-body">
+
+                @*--------------*@
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-hover dataTable" id="tabla2">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Nombre
+                                    </th>
+                                    <th>
+                                        File
+                                    </th>
+                                    <th>
+                                        Fecha
+                                    </th>
+                                    <th>
+                                        Ciudad
+                                    </th>
+                                    <th>
+                                        HoraRecojo
+                                    </th>
+                                    <th>
+                                        HoraSalida
+                                    </th>@*
+                                    <th>
+                                        Vuelo
+                                    </th>*@
+                                    <th>
+                                        Cant. Pasajeros
+                                    </th>
+                                    <th>
+                                        Pasajero
+                                    </th>
+                                    <th>
+                                        Transportista
+                                    </th>
+                                    <th>Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.servsTransporte) {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Nombre)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink(item.CodigoFile, "Details/" + item.IdFile, "Files")
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Fecha)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Ciudad)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.HoraRecojo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.HoraSalida)
+                                        </td>@*
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Vuelo)
+                                        </td>*@
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CantPasajeros)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NombrePasajero)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Transportista)
+                                        </td>
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.IdServicio" class="btn btn-default">
+                                                <span class="fa fa-pencil"></span>
+                                            </a>
+
+                                            <a asp-action="Details" asp-route-id="@item.IdServicio" class="btn btn-default">
+                                                <span class="fa fa-eye"></span>
+                                            </a>
+
+                                            <a asp-action="Calendar" asp-route-id="@item.IdServicio" class="btn btn-default">
+                                                <span class="fa fa-calendar-check-o"></span>
+                                            </a>
+
+                                            <a asp-action="Delete" asp-route-id="@item.IdServicio" class="btn btn-danger">
+                                                <span class="fa fa-trash-o"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <button type="button" class="btn btn-default" onclick="window.location.href='/Home/Index'">Ir al inicio</button>
+        <button type="button" class="btn btn-primary pull-right" onclick="window.location.href='/Servicios/Create'">Crear Servicio</button>
+    </div>
+</div>

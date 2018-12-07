@@ -5,6 +5,11 @@ namespace YllariFM.Models.DB
 {
     public partial class Servicio
     {
+        public Servicio()
+        {
+            RegistroRecordatorio = new HashSet<RegistroRecordatorio>();
+        }
+
         public int IdServicio { get; set; }
         public DateTime Fecha { get; set; }
         public string TipoServicio { get; set; }
@@ -27,5 +32,6 @@ namespace YllariFM.Models.DB
 
         public File IdFileNavigation { get; set; }
         public Proveedor IdProveedorNavigation { get; set; }
+        public ICollection<RegistroRecordatorio> RegistroRecordatorio { get; set; }
     }
 }

@@ -13,6 +13,15 @@ namespace YllariFM.Source
             public const string Transporte = "TRANS";
             public const string Servicio = "SERVI";
         }
-        
+
+        public class TipoProveedor {
+            public const string Persona = "PERSO";
+            public const string Empresa = "EMPRE";
+        }
+
+        public class TipoCliente {
+            public const string Persona = "PERSO";
+            public const string Empresa = "EMPRE";
+        }
     }
 }

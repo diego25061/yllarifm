@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YllariFM.Models.DB;
+using YllariFM.Source.ViewModels.Vistas;
 
 namespace CoreApp4.Controllers
 {
@@ -18,7 +20,13 @@ namespace CoreApp4.Controllers
         // GET: Proveedors
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Proveedor.ToListAsync());
+            //return View(await _context.Proveedor.ToListAsync());
+            var proveedors = _context.Proveedor.ToList();
+            List<ProveedorVm> lista = new List<ProveedorVm>();
+            foreach (var p in proveedors) {
+                lista.Add(ProveedorVm.generarDto(p));
+            }
+            return View(lista);
         }
 
         // GET: Proveedors/Details/5

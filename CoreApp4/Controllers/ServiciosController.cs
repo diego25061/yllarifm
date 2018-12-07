@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using YllariFM.Models.DB;
+using YllariFM.Source;
+using YllariFM.Source.ViewModels.Vistas;
 
 namespace CoreApp4.Controllers
 {
@@ -17,11 +19,25 @@ namespace CoreApp4.Controllers
         }
 
         // GET: Servicios
+        public ActionResult Index() {
+            LeerServiciosVm vm = new LeerServiciosVm();
+            var dbservs = _context.Servicio.Include(f =>f.IdProveedorNavigation).Include(f=>f.IdFileNavigation).ToList();
+            foreach(var v in dbservs) {
+                if (v.TipoServicio == Constantes.TipoServicio.Servicio) {
+                    vm.servsGenerales.Add(ServicioTotalVm.generarDto(v));
+                }else if(v.TipoServicio == Constantes.TipoServicio.Transporte) {
+                    vm.servsTransporte.Add(ServicioTotalVm.generarDto(v));
+                }
+            }
+            
+            return View(vm);
+        }
+        /*
         public async Task<IActionResult> Index()
         {
             var YllariFmContext = _context.Servicio.Include(s => s.IdFileNavigation).Include(s => s.IdProveedorNavigation);
             return View(await YllariFmContext.ToListAsync());
-        }
+        }*/
 
         // GET: Servicios/Details/5
         public async Task<IActionResult> Details(int? id)

@@ -18,10 +18,50 @@
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
+
+            @{
+                List<SelectListItem> listItems = new List<SelectListItem>();
+                listItems.Add(new SelectListItem {
+                    Text = "Persona",
+                    Value = YllariFM.Source.Constantes.TipoProveedor.Persona,
+                    Selected = true
+                });
+                listItems.Add(new SelectListItem {
+                    Text = "Empresa",
+                    Value = YllariFM.Source.Constantes.TipoProveedor.Empresa
+                });
+            }
+
             <div class="form-group">
+
                 <label asp-for="TipoProveedor" class="control-label"></label>
+                <div class="form-group">
+                    @Html.DropDownListFor(model => model.TipoProveedor, listItems)
+                </div>
+                @*
                 <input asp-for="TipoProveedor" class="form-control" />
-                <span asp-validation-for="TipoProveedor" class="text-danger"></span>
+                <span asp-validation-for="TipoProveedor" class="text-danger"></span>*@
+            </div>
+            <div class="form-group">
+                <label asp-for="Correo" class="control-label"></label>
+                <input asp-for="Correo" class="form-control" />
+                <span asp-validation-for="Correo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CorreoAdicional" class="control-label"></label>
+                <input asp-for="CorreoAdicional" class="form-control" />
+                <span asp-validation-for="CorreoAdicional" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NumeroContacto" class="control-label"></label>
+                <input asp-for="NumeroContacto" class="form-control" />
+                <span asp-validation-for="NumeroContacto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumeroCntctAdicional" class="control-label"></label>
+                <input asp-for="NumeroCntctAdicional" class="form-control" />
+                <span asp-validation-for="NumeroCntctAdicional" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

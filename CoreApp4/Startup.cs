@@ -7,6 +7,8 @@ using YllariFM.Models.DB;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using YllariFM.Source.ViewModels.Api;
+using YllariFM.Source.ViewModels.Vistas;
+using YllariFM.Source.ViewModels;
 
 namespace CoreApp4
 {
@@ -21,8 +23,15 @@ namespace CoreApp4
         public void configurarMapper() {
             Mapper.Initialize(cfg =>
             {
+
+                //api
                 cfg.CreateMap<Agencia, AgenciaDto>().ReverseMap();
                 cfg.CreateMap<ActualizarAgenciaDto, Agencia>().ReverseMap();
+                cfg.CreateMap<Biblia, YllariFM.Source.ViewModels.BibliasVms.BibliaDto>().ReverseMap();
+
+                //vms de vistas
+                cfg.CreateMap<ListarAgenciaVm, Agencia>().ReverseMap();
+                //cfg.CreateMap<BibliasVms.LeerIndexBibliaDto, Biblia>().ReverseMap();
             });
         }
 

@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using YllariFM.Models.DB;
+using YllariFM.Source.ViewModels;
+using YllariFM.Source.ViewModels.Vistas;
 
 namespace CoreApp4.Controllers {
     //[Route("api/reeee/")]
@@ -20,9 +24,10 @@ namespace CoreApp4.Controllers {
 
 
         // GET: Agencias
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Agencia.ToListAsync());
+        public async Task<IActionResult> Index(){
+            var agencias = _context.Agencia.ToList();
+            List<ListarAgenciaVm> lista = Mapper.Map<List<Agencia>, List<ListarAgenciaVm>>(agencias);
+            return View(lista);
         }
 
         // GET: Agencias/Details/5

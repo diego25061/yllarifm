@@ -9,19 +9,24 @@ namespace YllariFM.Models.DB
         public virtual DbSet<Agencia> Agencia { get; set; }
         public virtual DbSet<Biblia> Biblia { get; set; }
         public virtual DbSet<Ciudad> Ciudad { get; set; }
+        public virtual DbSet<Cliente> Cliente { get; set; }
         public virtual DbSet<File> File { get; set; }
         public virtual DbSet<Hotel> Hotel { get; set; }
         public virtual DbSet<Orden> Orden { get; set; }
         public virtual DbSet<Pasajero> Pasajero { get; set; }
         public virtual DbSet<Proveedor> Proveedor { get; set; }
+        public virtual DbSet<RegistroRecordatorio> RegistroRecordatorio { get; set; }
         public virtual DbSet<Servicio> Servicio { get; set; }
+
+        internal object Include(Func<object, object> p) {
+            throw new NotImplementedException();
+        }
 
         public YllariFmContext() {
         }
         public YllariFmContext(DbContextOptions<YllariFmContext> options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Agencia>(entity =>
             {
                 entity.HasKey(e => e.IdAgencia);
@@ -33,11 +38,11 @@ namespace YllariFM.Models.DB
 
                 entity.Property(e => e.CorreoContacto)
                     .IsRequired()
-                    .HasMaxLength(50)
+                    .HasMaxLength(80)
                     .IsUnicode(false);
 
                 entity.Property(e => e.CorreoExtra)
-                    .HasMaxLength(50)
+                    .HasMaxLength(80)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Nombre)
@@ -54,6 +59,10 @@ namespace YllariFM.Models.DB
             modelBuilder.Entity<Biblia>(entity =>
             {
                 entity.HasKey(e => e.IdBiblia);
+
+                entity.HasIndex(e => new { e.Anho, e.Mes })
+                    .HasName("unico mes anho biblia")
+                    .IsUnique();
             });
 
             modelBuilder.Entity<Ciudad>(entity =>
@@ -70,9 +79,40 @@ namespace YllariFM.Models.DB
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<Cliente>(entity =>
+            {
+                entity.HasKey(e => e.IdAgencia);
+
+                entity.Property(e => e.CorreoContacto)
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroAdicional)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContacto)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Tipo)
+                    .IsRequired()
+                    .HasMaxLength(5)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<File>(entity =>
             {
                 entity.HasKey(e => e.IdFile);
+
+                entity.HasIndex(e => e.Codigo)
+                    .HasName("codigo unico")
+                    .IsUnique();
 
                 entity.Property(e => e.Codigo)
                     .IsRequired()
@@ -96,6 +136,11 @@ namespace YllariFM.Models.DB
                     .HasForeignKey(d => d.IdBiblia)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_File_Biblia");
+
+                entity.HasOne(d => d.IdClienteNavigation)
+                    .WithMany(p => p.File)
+                    .HasForeignKey(d => d.IdCliente)
+                    .HasConstraintName("FK_File_Cliente");
             });
 
             modelBuilder.Entity<Hotel>(entity =>
@@ -126,13 +171,50 @@ namespace YllariFM.Models.DB
             {
                 entity.HasKey(e => e.IdProveedor);
 
-                entity.Property(e => e.Nombre)
+                entity.Property(e => e.Correo)
+                    .IsRequired()
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CorreoAdicional)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroCntctAdicional)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContacto)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoProveedor)
                     .HasMaxLength(5)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<RegistroRecordatorio>(entity =>
+            {
+                entity.HasKey(e => e.IdRegistroRecordatorio);
+
+                entity.Property(e => e.IdRegistroRecordatorio).ValueGeneratedNever();
+
+                entity.Property(e => e.Fecha).HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdProveedorNavigation)
+                    .WithMany(p => p.RegistroRecordatorio)
+                    .HasForeignKey(d => d.IdProveedor)
+                    .HasConstraintName("FK_RegistroRecordatorio_Proveedor");
+
+                entity.HasOne(d => d.IdServicioNavigation)
+                    .WithMany(p => p.RegistroRecordatorio)
+                    .HasForeignKey(d => d.IdServicio)
+                    .HasConstraintName("FK_RegistroRecordatorio_Servicio");
             });
 
             modelBuilder.Entity<Servicio>(entity =>
@@ -195,7 +277,6 @@ namespace YllariFM.Models.DB
                 entity.HasOne(d => d.IdFileNavigation)
                     .WithMany(p => p.Servicio)
                     .HasForeignKey(d => d.IdFile)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Servicio_File");
 
                 entity.HasOne(d => d.IdProveedorNavigation)

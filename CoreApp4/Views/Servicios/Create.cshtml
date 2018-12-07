@@ -33,13 +33,6 @@
                 <select asp-for="IdFile" class ="form-control" asp-items="ViewBag.IdFile"></select>
             </div>
             <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="EsProvincia" /> @Html.DisplayNameFor(model => model.EsProvincia)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
                 <label asp-for="HoraRecojo" class="control-label"></label>
                 <input asp-for="HoraRecojo" class="form-control" />
                 <span asp-validation-for="HoraRecojo" class="text-danger"></span>

@@ -20,7 +20,11 @@
 
     <script>
         $(document).ready(function () {
-            $('#tabla1').DataTable();
+            $('#tabla1').DataTable({
+                "columnDefs": [
+                    { "width": "15%", "targets": 7 }
+                ]
+            } );
         });
         /*
         function borrar(idEntidad, idModal) {
@@ -114,18 +118,23 @@
                                                 <span class="fa fa-pencil"></span>
                                             </a>
                                             @*
-                                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                            <a asp-action="Delete" asp-route-id="@item.Id" class="fa fa-transgender-alt">Delete</a>
+        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.Id" class="fa fa-transgender-alt">Delete</a>
                                             *@
 
                                             <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-default">
                                                 <span class="fa fa-trash-o"></span>
+                                            </a>
+
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-default">
+                                                <span class="fa fa-eye"></span>
                                             </a>
                                         </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
+                    </span>
                 </div>
             </div>
         </div>
