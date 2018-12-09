@@ -5,13 +5,36 @@
     "outputFileName": "wwwroot/css/site.min.css",
     // An array of relative input file paths. Globbing patterns supported
     "inputFiles": [
-      "wwwroot/css/site.css"
+        //layout------
+        "wwwroot/css/site.css",
+        "wwwroot/theme/bower_components/bootstrap/dist/css/bootstrap.min.css",
+        "wwwroot/theme/bower_components/font-awesome/css/font-awesome.min.css",
+        "wwwroot/theme/bower_components/Ionicons/css/ionicons.min.css",
+        "wwwroot/theme/dist/css/AdminLTE.min.css",
+        "wwwroot/theme/dist/css/skins/_all-skins.min.css",
+        "wwwroot/css/site.css",
+        //------------- datatables no incluido
+        "wwwroot/theme/bower_components/fullcalendar-3.9.0/fullcalendar.min.css",
+        "wwwroot/theme/bower_components/fullcalendar-3.9.0/fullcalendar.print.min.css"
     ]
   },
   {
     "outputFileName": "wwwroot/js/site.min.js",
     "inputFiles": [
-      "wwwroot/js/site.js"
+        //layout------
+        "wwwroot/js/site.js",
+        "wwwroot/theme/bower_components/jquery/dist/jquery.min.js",
+        "wwwroot/theme/bower_components/bootstrap/dist/js/bootstrap.min.js",
+        "wwwroot/theme/bower_components/jquery-slimscroll/jquery.slimscroll.min.js",
+        "wwwroot/theme/bower_components/knockoutjs/knockout.mapping-latest.js",
+        "wwwroot/theme/bower_components/fastclick/lib/fastclick.js",
+        "wwwroot/theme/dist/js/adminlte.min.js",
+        //--------
+        "wwwroot/theme/bower_components/moment/moment.js",
+        "wwwroot/theme/bower_components/fullcalendar-3.9.0/fullcalendar.min.js",
+        "wwwroot/theme/bower_components/fullcalendar-3.9.0/locale/es.js",
+        "wwwroot/theme/bower_components/font-awesome/fonts/fontawesome-webfont.ttf"
+
     ],
     // Optionally specify minification options
     "minify": {

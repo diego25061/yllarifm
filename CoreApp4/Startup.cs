@@ -59,6 +59,7 @@ namespace CoreApp4
 
             app.UseStaticFiles();
 
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

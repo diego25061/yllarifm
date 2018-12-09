@@ -17,7 +17,7 @@ function dr_mostrarMensajesRespuestaTransaccion(idContenedor, respuesta) {
     if (respuesta.Contenido) {
         var idgen = idContenedor + "_cont";
         $('#' + idContenedor).append("<div id=" + idgen + "></div>");
-            dr_mostrarDialogo(idgen, respuesta.Contenido, 'success');
+        dr_mostrarDialogo(idgen, respuesta.Contenido, 'success');
     }
     if (respuesta.msjError) {
         var idgen = idContenedor + "_error";
@@ -70,7 +70,7 @@ function Servicio(fecha, ciudad, servicio, hotel, pasajeros, nombrePasajero, tre
 //apiiiiiii
 
 
-function cargarBiblias( fail ) {
+function cargarBiblias(fail) {
     var biblias;
     $.getJSON("/api/biblias", function asd(data) {
         data.reverse();
@@ -82,4 +82,86 @@ function cargarBiblias( fail ) {
 
 function crearBibliaOnFly(mes, anho, successFunc, failFunc) {
     $.post("/api/biblias/crear", Biblia(mes, anho)).success(successFunc).fail(failFunc);
+}
+
+function mesIntAString(mes) {
+    if (mes == 1)
+        return 'Enero';
+    else if (mes == 2)
+        return 'Febrero';
+    else if (mes == 2)
+        return 'Marzo';
+    else if (mes == 2)
+        return 'Abril';
+    else if (mes == 2)
+        return 'Mayo';
+    else if (mes == 2)
+        return 'Junio';
+    else if (mes == 2)
+        return 'Julio';
+    else if (mes == 2)
+        return 'Agosto';
+    else if (mes == 2)
+        return 'Setiembre';
+    else if (mes == 2)
+        return 'Octubre';
+    else if (mes == 2)
+        return 'Noviembre';
+    else if (mes == 2)
+        return 'Diciembre';
+}
+
+function mesAnhoANombre(mes, anho) {
+    var txt = mesIntAString(mes) + ' ' + anho;
+    return txt;
+}
+
+function crearMsjDialogo(texto, severidad, idContenedor) {
+    if (severidad == 'danger')
+        var div = '<div class="alert alert-danger alert-dismissible"><i class="icon fa fa-ban"></i></div>';
+    else if (severidad == 'warning')
+        var div = '<div class="alert alert-warning alert-dismissible"><i class="icon fa fa-warning"></i></div>';
+    else if (severidad == 'success')
+        var div = '<div class="alert alert-success alert-dismissible"><i class="icon fa fa-check"></i></div>';
+    else
+        var div = '<div class="alert alert-info alert-dismissible"><i class="icon fa fa-check"></i></div>';
+
+    var comp = $(div).append(texto);
+    $('#' + idContenedor).append(comp);
+}
+
+function objetoErrorAMsj(error, mostrarTrace) {
+    var msj = "";
+    if (error.msj)
+        msj += error.msj + '</br>';
+    if (error.exError)
+        msj += error.exError + '</br>';
+    if (error.exTrace && mostrarTrace)
+        msj += error.exTrace + '</br>';
+    return msj;
+}
+
+function postearVmQuick(ruta, viewModel, mensajeExito, idContenedorError, onSuccess, onError) {
+    $.ajax({
+        url: ruta,
+        cache: false,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: ko.toJSON(viewModel),
+        success: function (data) {
+            console.log(data);
+            if (mensajeExito != "")
+                crearMsjDialogo(mensajeExito, 'success', idContenedorError);
+            if (onSuccess)
+                onSuccess();
+        },
+        error: function (data) {
+            //var rpta = data.responseJSON;
+            var error = data.responseJSON;
+            console.log(error);
+            crearMsjDialogo(objetoErrorAMsj(error, false), 'danger', idContenedorError);
+            if (onError)
+                onError();
+        }
+    });
 }

@@ -18,10 +18,6 @@ namespace YllariFM.Models.DB
         public virtual DbSet<RegistroRecordatorio> RegistroRecordatorio { get; set; }
         public virtual DbSet<Servicio> Servicio { get; set; }
 
-        internal object Include(Func<object, object> p) {
-            throw new NotImplementedException();
-        }
-
         public YllariFmContext() {
         }
         public YllariFmContext(DbContextOptions<YllariFmContext> options) : base(options) { }
@@ -32,7 +28,6 @@ namespace YllariFM.Models.DB
                 entity.HasKey(e => e.IdAgencia);
 
                 entity.Property(e => e.Ciudad)
-                    .IsRequired()
                     .HasMaxLength(150)
                     .IsUnicode(false);
 
@@ -51,7 +46,6 @@ namespace YllariFM.Models.DB
                     .IsUnicode(false);
 
                 entity.Property(e => e.Pais)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
@@ -81,7 +75,11 @@ namespace YllariFM.Models.DB
 
             modelBuilder.Entity<Cliente>(entity =>
             {
-                entity.HasKey(e => e.IdAgencia);
+                entity.HasKey(e => e.IdCliente);
+
+                entity.Property(e => e.Ciudad)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CorreoContacto)
                     .HasMaxLength(80)
@@ -98,6 +96,10 @@ namespace YllariFM.Models.DB
 
                 entity.Property(e => e.NumeroContacto)
                     .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Pais)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Tipo)

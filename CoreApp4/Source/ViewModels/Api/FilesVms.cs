@@ -73,14 +73,12 @@ namespace YllariFM.Source.ViewModels.Api {
                         Obs = s.Observaciones
                     });
                 else
-                if (s.TipoServicio == Constantes.TipoServicio.Transporte)
-                    dto.Transportes.Add(new ServTransporteDto() {
+                if (s.TipoServicio == Constantes.TipoServicio.Transporte) {
+                    var tr = new ServTransporteDto() {
                         IdServicio = s.IdServicio,
                         Fecha = Utils.datetimeAString(s.Fecha),
                         Ciudad = s.Ciudad,
                         Servicio = s.Nombre,
-                        HoraRecojo = Utils.timespanAStringHora(s.HoraRecojo.Value),
-                        HoraSalida = Utils.timespanAStringHora(s.HoraSalida.Value),
 
                         Vuelo = s.Vuelo,
                         Pasajeros = s.Pasajeros,
@@ -89,7 +87,20 @@ namespace YllariFM.Source.ViewModels.Api {
                         Transp = s.Transporte,
                         Obs = s.Observaciones,
                         Tc = s.Tc
-                    });
+                    };
+
+                    if (s.HoraRecojo.HasValue)
+                        tr.HoraRecojo = Utils.timespanAStringHora(s.HoraRecojo.Value);
+                    else
+                        tr.HoraRecojo = "Hora no definida";
+
+                    if (s.HoraSalida.HasValue)
+                        tr.HoraSalida = Utils.timespanAStringHora(s.HoraSalida.Value);
+                    else
+                        tr.HoraSalida = "Hora no definida";
+
+                    dto.Transportes.Add(tr);
+                }
             }
             return dto;
         }

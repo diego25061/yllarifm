@@ -24,10 +24,14 @@
             start();
         });
 
+        var vmEnviarAgencias;
         var vm;
-        var vmAgencia;
+        var vmCliente;
         var vmBiblia;
 
+        function enviarCrearCliente() {
+            console.log("Enviando agencia");
+        }
         /*
         function actualizarservs() {
             /*
@@ -36,14 +40,23 @@
                 { ciudad: 1, servicio: "Tour plaza de armas", hotel: 2, pasajeros: 4, nombrePax: "Carlos", agencia: 1, tren: "", alm: "", obs: "" },
                 { ciudad: 3, servicio: "Visita museo", hotel: 3, pasajeros: 3, nombrePax: "Larry", agencia: 2, tren: "", alm: "", obs: "" }
             ]);*/
-            //ko.applyBindings(vm);
+        //ko.applyBindings(vm);
         /*}*/
 
         function start() {
-            cargarAgencias();
-            cargarBiblias();
             vm = new FileViewModel();
-            ko.applyBindings(vm);
+            vmCliente = new ClienteViewModel();
+            vmBiblia = new BibliaViewModel();
+            //cargarAgencias();
+            cargarClientes();
+            cargarBiblias();
+
+
+
+            ko.applyBindings(vm, document.getElementById('boxContenidoFile'));
+            ko.applyBindings(vmCliente, document.getElementById('modalCrearCliente'));
+            ko.applyBindings(vmBiblia, document.getElementById('modalCrearBiblia'));
+            
         }
 
         function crearBibliaOnFly() {
@@ -56,14 +69,42 @@
                 alert("Agencia creada");
             });
         }
+        /*
+        function enviarCrearCliente(viewModel, idContenedor) {
+            $.ajax({
+                url: '/api/agencias/guardar',
+                cache: false,
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: ko.toJSON(viewModel),
+                success: function (data) {
+                    console.log(data);
+                    //dr_mostrarMensajesRespuestaTransaccion(idContenedor, data);
+                    crearMsjDialogo(data.msjError, 'danger',idContenedor);
+                },
+                error: function (data) {
+                    var rpta = data.responseJSON;
+                    console.log(rpta);
+                    crearMsjDialogo(data.msjError, 'danger', idContenedor);
+                    //dr_mostrarMensajesRespuestaTransaccion(idContenedor, rpta);
+                }
+            });
+        }
+        */
 
-        function crearAgenciaOnFly() {
-            $
+        function cargarClientes() {
+            $.getJSON("/api/clientes/todo", function (data) {
+                console.log(data);
+                ko.mapping.fromJS(data, {}, vm.clientes);
+            }).fail(function (data) {
+                var msj = data.responseJSON;
+                dr_mostrarDialogo("contDialogo", "ERROR AL CARGAR CLIENTES: " + msj.msjError, "danger");
+            });
         }
 
-
         function cargarAgencias() {
-            $.getJSON("/api/agencias", function (data) {
+            $.getJSON("/api/agencias/todo", function (data) {
+                console.log(data);
                 ko.mapping.fromJS(data, {}, vm.agencias);
             }).fail(function (data) {
                 var msj = data.responseJSON;
@@ -72,7 +113,7 @@
         }
 
         function cargarBiblias() {
-            $.getJSON("/api/biblias", function (data) {
+            $.getJSON("/api/biblias/todoNombre", function (data) {
                 data.reverse();
                 ko.mapping.fromJS(data, {}, vm.biblias);
             }).fail(function (data) {
@@ -80,30 +121,56 @@
                 dr_mostrarDialogo("contDialogo", "ERROR AL CARGAR BIBLIAS: " + msj.msjError, "danger");
             });
         }
-        @*
-        function cargarAgencias() {
-            var datos;
-            $.getJSON("/api/agencias", function (data) {
 
-                $.each(data, function (key, val) {
+        function ClienteAgregadoCallback() {
+            cargarClientes();
+            $('#modalCrearCliente').modal('hide');
+        }
 
-                    console.log("obj " + key + ".");
-                    $.each(val, function (a, b) {
-                        console.log(a + ":" + b);
-                    });
+        function BibliaAgregadaCallback() {
+            console.log("bbbb");
+            cargarBiblias();
+            $('#modalCrearbiblia').modal('hide');
+        }
+
+        function ClienteViewModel() {
+            var self = this;
+            self.nombre = ko.observable();
+            self.tipo = ko.observable();
+            self.correoContacto = ko.observable();
+            self.numeroContacto = ko.observable();
+            self.numeroAdicional = ko.observable();
+            self.pais = ko.observable();
+            self.ciudad = ko.observable();
 
 
-                });
+            self.tipos = ko.observableArray([
+                { nombre: "Empresa", valor: 'EMPRE' },
+                { nombre: "Persona", valor: 'PERSO' }
+            ]);
+        }
 
-                console.log("datos recibidos: ");
-                console.log(data);
-                datos = data;
-                vm.ciudades(data);
-                /*
-                ko.mapping.fromJS(data, {}, vm.ciudades);
-                console.log("ciudades: " + vm.ciudades.length);*/
-            });
-        }*@
+
+        function BibliaViewModel() {
+            var self = this;
+            self.mes = ko.observable();
+            self.anho = ko.observable('2018');
+
+            self.meses = ko.observableArray([
+                { nombre: "Enero", valor: '1' },
+                { nombre: "Febrero", valor: '2' },
+                { nombre: "Marzo", valor: '3' },
+                { nombre: "Abril", valor: '4' },
+                { nombre: "Mayo", valor: '5' },
+                { nombre: "Junio", valor: '6' },
+                { nombre: "Julio", valor: '7' },
+                { nombre: "Agosto", valor: '8' },
+                { nombre: "Setiembre", valor: '9' },
+                { nombre: "Octubre", valor: '10' },
+                { nombre: "Noviembre", valor: '11' },
+                { nombre: "Diciembre", valor: '12' }
+            ]);
+        }
 
         function FileViewModel() {
             var self = this;
@@ -113,7 +180,6 @@
             self.descripcion = ko.observable();
 
             self.exponer = function () {
-
                 console.log("servicios: " + ko.toJSON(this));
             };
             self.enviar = function () {
@@ -134,6 +200,7 @@
                     }
                 });
             };
+
             self.biblias = ko.observableArray([]);
             self.servicios = ko.observableArray([
                 /*
@@ -150,11 +217,18 @@
             self.ciudades = ko.observableArray(
                 //{ nombre: "Lima", id: 2 },{ nombre: "Cusco", id: 1 },{ nombre: "Arequipa", id: 3 },
             );
-
-            self.agencias = ko.observableArray([
             /*
+            self.agencias = ko.observableArray([
+
                 { nombre: "Golden", id: 1 },
-                { nombre: "Continental", id: 2 }*/
+                { nombre: "Continental", id: 2 }
+            ]);
+            */
+
+            self.clientes = ko.observableArray([
+                /*
+                    { nombre: "Golden", id: 1 },
+                    { nombre: "Continental", id: 2 }*/
             ]);
             /*
             self.hoteles = ko.observableArray([
@@ -190,178 +264,188 @@
 <h2>Nuevo File</h2>
 <div class="row">
     <div class="col-md-12">
-        <div class="box box-solid">
+        <div class="box box-solid" id="boxContenidoFile">
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Codigo *</label>
-                            <input class="form-control" type="text" data-bind="value: codigo" placeholder="08-010"/>
+                            <input class="form-control" type="text" data-bind="value: codigo" placeholder="08-010" />
                         </div>
                         <div class="form-group">
+
                             <label>Biblia *</label>
+                            <div class="input-group">
+                                <select class="form-control" data-bind="options: biblias,
+                                        optionsText: 'Nombre',
+                                        optionsValue: 'IdBiblia',
+                                        value: idBiblia"></select>
+
+                                @*<input class="form-control" type="text" data-bind="value: agencia" placeholder="Golden" />*@
+                                <a class="input-group-addon" onclick="$('#modalCrearBiblia').modal('show');">
+                                    <span class="fa fa-plus"></span>
+                                </a>
+                            </div>
+                            <div id="contenedorTransaccionBiblia"></div>
+
+
                             @*
                                 <select class="form-control" data-bind="value: biblia">
                                     <option>Agosto 2018</option>
                                     <option>Junio 2018</option>
                                 </select>
                             *@
-                            <select class="form-control" data-bind="options: biblias,
-                                        optionsText: 'nombre',
-                                        optionsValue: 'id',
-                                        value: idBiblia"></select>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Agencia *</label>
-
-                            <select class="form-control" data-bind="options: agencias,
-                                        optionsText: 'nombre',
-                                        optionsValue: 'id',
+                            <label>Cliente *</label>
+                            <div class="input-group">
+                                <select class="form-control" data-bind="options: clientes,
+                                        optionsText: 'Nombre',
+                                        optionsValue: 'IdCliente',
                                         value: idAgencia"></select>
-                            @*<input class="form-control" type="text" data-bind="value: agencia" placeholder="Golden" />*@
+
+                                @*<input class="form-control" type="text" data-bind="value: agencia" placeholder="Golden" />*@
+                                <a class="input-group-addon" onclick="$('#modalCrearCliente').modal('show');">
+                                    <span class="fa fa-plus"></span>
+                                </a>
+                            </div>
+                            <div id="contenedorTransaccionCliente"></div>
                         </div>
+
                         <div class="form-group">
                             <label>Descripcion</label>
                             <textarea class="form-control" rows="1" placeholder="Ingresar..." data-bind="value: descripcion"></textarea>
                         </div>
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <h4>Servicios</h4>
+                    <div class="attachment-block no-padding">
+                        <table class="table table-condensed" id="tabla1">
+                            <thead>
+                                <tr>
+                                    <th>Fecha *</th>
+                                    <th>Ciudad</th>
+                                    <th>Servicio *</th>
+                                    <th>Hotel</th>
+                                    <th>Pasajeros *</th>
+                                    <th>Nombre Pax. *</th>
+                                    <th>Tren</th>
+                                    <th>ALM</th>
+                                    <th>OBS</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: servicios">
+                                <tr>
+                                    <td><input type="date" class="form-control no-padding" data-bind="value: fecha" /></td>
+
+                                    <td><input class="form-control no-padding" data-bind="value: ciudad" placeholder="Lima" /></td>
+                                    @*
+                                        <td>
+                                            <select class="form-control" data-bind="options: $root.ciudades,
+                                                optionsText: 'nombre',
+                                                optionsValue: 'id',
+                                                value: ciudad"></select>
+                                        </td>
+                                    *@
+                                    <td><input class="form-control no-padding" data-bind="value: servicio" placeholder="LEON DE ORO / APTO" /></td>
+
+                                    <td><input class="form-control no-padding" data-bind="value: hotel" placeholder="Las Dunas" /></td>
+                                    @*
+                                        <td>
+                                            <select class="form-control" data-bind="options: $root.hoteles,
+                                                optionsText: 'nombre',
+                                                optionsValue: 'id',
+                                                value: hotel"></select>
+                                        </td>
+                                    *@
+                                    <td><input class="form-control no-padding" type="number" data-bind="value: pasajeros" placeholder="2" /></td>
+                                    <td><input class="form-control no-padding" data-bind="value: nombrePasajero" placeholder="Christian Cueva" /></td>
+
+                                    <td><input class="form-control no-padding" data-bind="value: tren" placeholder="EXP" /></td>
+                                    <td><input class="form-control no-padding" data-bind="value: alm" placeholder="AYASQA" /></td>
+                                    <td><input class="form-control no-padding" data-bind="value: obs" placeholder="Observaciones..." /></td>
+                                    <td>
+                                        <a class="btn btn-danger" data-bind="click: $root.quitarServicio">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-default" data-bind="click: agregarServicio"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;Agregar servicio</button>
+
+                </div>
+
+
+                <div class="col-md-12">
+                    <h4>Transportes</h4>
+                    <div class="attachment-block no-padding">
+                        <table class="table table-condensed" id="tabla2">
+                            <thead>
+
+
+                                <tr>
+                                    <th>Fecha *</th>
+                                    <th>Ciudad</th>
+                                    <th>Hora recojo *</th>
+                                    <th>Hora salida *</th>
+                                    <th>Vuelo</th>
+                                    <th>Servicio *</th>
+                                    <th>Pasajeros *</th>
+                                    <th>Nombre Pax. *</th>
+                                    <th>V/R</th>
+                                    <th>TC</th>
+                                    <th>Transp.</th>
+                                    <th>OBS</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: transportes">
+                                <tr>
+                                    <td><input type="date" class="form-control no-padding" data-bind="value: fecha" /></td>
+                                    <td><input class="form-control no-padding" data-bind="value: ciudad" placeholder="Lima" /></td>
+                                    @*
+                                        <td>
+                                            <select class="form-control" data-bind="options: $root.ciudades,
+                                                optionsText: 'nombre',
+                                                optionsValue: 'id',
+                                                value: ciudad"></select>
+                                        </td>
+                                    *@
+                                    <td><input type="time" class="form-control no-padding" data-bind="value: horaRecojo" /></td>
+                                    <td><input type="time" class="form-control no-padding" data-bind="value: horaSalida" /></td>
+                                    <td><input class="form-control no-padding" data-bind="value: vuelo" placeholder="LA 2009" /></td>
+                                    <td><input class="form-control no-padding" data-bind="value: servicio" placeholder="APTO / CROWNE PLAZA" /></td>
+                                    <td><input type="number" class="form-control no-padding" data-bind="value: pasajeros" placeholder="2" /></td>
+                                    <td><input class="form-control no-padding" data-bind="value: nombrePasajero" placeholder="Aldo Corzo" /></td>
+
+                                    <td><input class="form-control no-padding" data-bind="value: vr" placeholder="V" /></td>
+
+                                    <td><input class="form-control no-padding" data-bind="value: tc" placeholder="TC" /></td>
+                                    <td><input class="form-control no-padding" data-bind="value: transp" placeholder="JAVIER" /></td>
+                                    <td><input class="form-control no-padding" data-bind="value: obs" placeholder="LIM / CUS" /></td>
+
+                                    <td>
+                                        <a class="btn btn-danger" data-bind="click: $root.quitarTransporte">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-default" data-bind="click: agregarTransporte">
+                        <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;Agregar transporte
+                    </button>
+                </div>
+
+
             </div>
         </div>
     </div>
-    <div class="col-md-12">
-        <h4>Servicios</h4>
-        <div class="box box-solid">
-            <div class="box-body">
-                <table class="table" id="tabla1">
-                    <thead>
-                        <tr>
-                            <th>Fecha *</th>
-                            <th>Ciudad</th>
-                            <th>Servicio *</th>
-                            <th>Hotel</th>
-                            <th>Pasajeros *</th>
-                            <th>Nombre Pax. *</th>
-                            <th>Tren</th>
-                            <th>ALM</th>
-                            <th>OBS</th>
-                        </tr>
-                    </thead>
-                    <tbody data-bind="foreach: servicios">
-                        <tr>
-                            <td><input type="date" class="form-control" data-bind="value: fecha" /></td>
-
-                            <td><input class="form-control" data-bind="value: ciudad" placeholder="Lima" /></td>
-                            @*
-                                <td>
-                                    <select class="form-control" data-bind="options: $root.ciudades,
-                                        optionsText: 'nombre',
-                                        optionsValue: 'id',
-                                        value: ciudad"></select>
-                                </td>
-                            *@
-                            <td><input class="form-control" data-bind="value: servicio" placeholder="LEON DE ORO / APTO" /></td>
-
-                            <td><input class="form-control" data-bind="value: hotel" placeholder="Las Dunas" /></td>
-                            @*
-                                <td>
-                                    <select class="form-control" data-bind="options: $root.hoteles,
-                                        optionsText: 'nombre',
-                                        optionsValue: 'id',
-                                        value: hotel"></select>
-                                </td>
-                            *@
-                            <td><input class="form-control" type="number" data-bind="value: pasajeros" placeholder="2" /></td>
-                            <td><input class="form-control" data-bind="value: nombrePasajero" placeholder="Christian Cueva" /></td>
-
-                            <td><input class="form-control" data-bind="value: tren" placeholder="EXP" /></td>
-                            <td><input class="form-control" data-bind="value: alm" placeholder="AYASQA" /></td>
-                            <td><input class="form-control" data-bind="value: obs" placeholder="Observaciones..." /></td>
-                            <td>
-                                <a class="btn btn-default" data-bind="click: $root.quitarServicio">
-                                    <i class="fa fa-trash-o"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-            </div>
-            <div class="box-footer">
-                <button class="btn btn-default" data-bind="click: agregarServicio"><i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;Agregar servicio</button>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-12">
-        <h4>Transportes</h4>
-        <div class="box box-solid">
-            <div class="box-body">
-                <table class="table" id="tabla2">
-                    <thead>
-
-
-                        <tr>
-                            <th>Fecha *</th>
-                            <th>Ciudad</th>
-                            <th>Hora recojo *</th>
-                            <th>Hora salida *</th>
-                            <th>Vuelo</th>
-                            <th>Servicio *</th>
-                            <th>Pasajeros *</th>
-                            <th>Nombre Pax. *</th>
-                            <th>V/R</th>
-                            <th>TC</th>
-                            <th>Transp.</th>
-                            <th>OBS</th>
-                        </tr>
-                    </thead>
-                    <tbody data-bind="foreach: transportes">
-                        <tr>
-                            <td><input type="date" class="form-control" data-bind="value: fecha"/></td>
-                            <td><input class="form-control" data-bind="value: ciudad" placeholder="Lima" /></td>
-                            @*
-                                <td>
-                                    <select class="form-control" data-bind="options: $root.ciudades,
-                                        optionsText: 'nombre',
-                                        optionsValue: 'id',
-                                        value: ciudad"></select>
-                                </td>
-                            *@
-                            <td><input type="time" class="form-control" data-bind="value: horaRecojo" /></td>
-                            <td><input type="time" class="form-control" data-bind="value: horaSalida" /></td>
-                            <td><input class="form-control" data-bind="value: vuelo" placeholder="LA 2009" /></td>
-                            <td><input class="form-control" data-bind="value: servicio" placeholder="APTO / CROWNE PLAZA" /></td>
-                            <td><input type="number" class="form-control" data-bind="value: pasajeros" placeholder="2" /></td>
-                            <td><input class="form-control" data-bind="value: nombrePasajero" placeholder="Aldo Corzo" /></td>
-
-                            <td><input class="form-control" data-bind="value: vr" placeholder="V" /></td>
-
-                            <td><input class="form-control" data-bind="value: tc" placeholder="TC" /></td>
-                            <td><input class="form-control" data-bind="value: transp" placeholder="JAVIER" /></td>
-                            <td><input class="form-control" data-bind="value: obs" placeholder="LIM / CUS" /></td>
-
-                            <td>
-                                <a class="btn btn-default" data-bind="click: $root.quitarTransporte">
-                                    <i class="fa fa-trash-o"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="box-footer">
-                <button class="btn btn-default" data-bind="click: agregarTransporte">
-                    <i class="fa fa-plus"></i>&nbsp;&nbsp;&nbsp;Agregar transporte
-                </button>
-            </div>
-        </div>
-    </div>
-
-
 </div>
 <div id="contDialogo"></div>
 @*<button class="btn btn-warning pull-right" onclick="cargarAgencias()">Guardar</button>*@
@@ -371,3 +455,95 @@
 @*<div>
         <a asp-action="Index">@("Volver")</a>
     </div>*@
+
+<div id="modalCrearCliente" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Nuevo cliente</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label>Nombre *</label>
+                    <input class="form-control" type="text" data-bind="value: nombre" placeholder="Golden" />
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo</label>
+
+                    <select class="form-control" data-bind="options: tipos,
+                                        optionsText: 'nombre',
+                                        optionsValue: 'valor',
+                                        value: tipo"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Correo de contacto</label>
+                    <input class="form-control" type="text" data-bind="value: correoContacto" placeholder="ventas@golden.com" />
+                </div>
+
+                <div class="form-group">
+                    <label>Numero contacto</label>
+                    <input class="form-control" type="text" data-bind="value: numeroContacto" placeholder="(+511) 120 4567" />
+                </div>
+
+                <div class="form-group">
+                    <label>Numero de contacto adicional</label>
+                    <input class="form-control" type="text" data-bind="value: numeroAdicional" placeholder="(+511) 120 4567" />
+                </div>
+                <div class="form-group">
+                    <label>Pais</label>
+                    <input class="form-control" type="text" data-bind="value: pais" placeholder="Venezuela" />
+                </div>
+                <div class="form-group">
+                    <label>Ciudad</label>
+                    <input class="form-control" type="text" data-bind="value: ciudad" placeholder="Caracas" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                @*<button type="button" class="btn btn-primary" onclick="enviarCrearCliente(vmCliente,'contenedorTransaccionCliente')">Agregar</button>*@
+                <button type="button" class="btn btn-primary" onclick="postearVmQuick('/api/clientes/guardar',vmCliente,'Cliente creado','contenedorTransaccionCliente',ClienteAgregadoCallback,null)">Agregar</button>
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<div id="modalCrearBiblia" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Nuevo cliente</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Mes</label>
+
+                    <select class="form-control" data-bind="options: meses,
+                                        optionsText: 'nombre',
+                                        optionsValue: 'valor',
+                                        value: mes"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Año</label>
+                    <input class="form-control" type="number" data-bind="value: anho" placeholder="2018"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                @*<button type="button" class="btn btn-primary" onclick="enviarCrearCliente(vmCliente,'contenedorTransaccionCliente')">Agregar</button>*@
+                <button type="button" class="btn btn-primary" onclick="postearVmQuick('/api/biblias/guardar', vmBiblia, 'Biblia creada', 'contenedorTransaccionBiblia', BibliaAgregadaCallback, null)">Agregar</button>
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

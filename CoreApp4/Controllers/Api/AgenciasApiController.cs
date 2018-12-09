@@ -55,7 +55,7 @@ namespace YllariFM.Controllers.Api {
                 _context.SaveChanges();
                 return Json(dbo.IdAgencia);
             } catch (Exception ex) {
-                return Json(new Respuesta("", ex), StatusCodes.Status500InternalServerError);
+                return Json(new Respuesta("Error al guardar agencia", ex), StatusCodes.Status500InternalServerError);
             }
         }
 

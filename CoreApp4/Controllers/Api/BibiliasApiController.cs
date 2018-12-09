@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using YllariFM.Models.DB;
+using YllariFM.Source;
 using YllariFM.Source.ViewModels;
 using static YllariFM.Source.ViewModels.BibliasVms;
 
@@ -24,6 +25,21 @@ namespace YllariFM.Controllers.Api {
             try {
                 var biblias = _context.Biblia.ToList();
                 var lista = Mapper.Map<List<Biblia>, List<BibliaDto>>(biblias);
+                return Json(lista);
+            } catch (Exception ex) {
+                return Json(new Respuesta("", ex), StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        //TODO necesario xq no puedo modificar desde la view :c .Aprender react!
+        [HttpGet("todoNombre")]
+        public ActionResult GetNombre() {
+            try {
+                var biblias = _context.Biblia.ToList();
+                List<object> lista = new List<object>();
+                foreach(var b in biblias) {
+                    lista.Add(new { Nombre = Utils.MesIntATexto(b.Mes)+" "+b.Anho , IdBiblia = b.IdBiblia});
+                }
                 return Json(lista);
             } catch (Exception ex) {
                 return Json(new Respuesta("", ex), StatusCodes.Status500InternalServerError);
