@@ -36,6 +36,8 @@ namespace YllariFM.Source
 
         public static TimeSpan stringHoraATime(string hora)
         {
+            if (hora.Split(':').Length < 2)
+                throw new Exception("Hora invalida");
             return new DateTime(2000, 1, 1, Convert.ToInt32(hora.Split(':')[0]), Convert.ToInt32(hora.Split(':')[1]), 0).TimeOfDay;
         }
 
@@ -108,10 +110,42 @@ namespace YllariFM.Source
                 return false;
             }
         }
+        public static bool stringVacio(string s) {
+            return !stringLleno(s);
+        }
 
         public static bool stringLleno(string s) {
             return !(String.IsNullOrEmpty(s) || String.IsNullOrWhiteSpace(s));
         }
 
+        public static string listaStringsAListaHtml(List<string> strings) {
+            string ss = "";
+            var modelErrors = new List<string>();
+            int i = 0;
+            foreach (var v in strings) {
+                    i++;
+                    if (i != 1) ;
+                    ss += "</br>";
+                    modelErrors.Add(v);
+                    ss += i + ". " + v;
+            }
+            return ss;
+        }
+
+        public static string getHtmlStringErroresModelState(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary ms) {
+            string ss = "";
+            var modelErrors = new List<string>();
+            int i = 0;
+            foreach (var modelState in ms.Values) {
+                foreach (var modelError in modelState.Errors) {
+                    i++;
+                    if (i != 1) ;
+                    ss += "</br>";
+                    modelErrors.Add(modelError.ErrorMessage);
+                    ss += i + ". " + modelError.ErrorMessage;
+                }
+            }
+            return ss;
+        }
     }
 }

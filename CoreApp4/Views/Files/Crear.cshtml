@@ -56,7 +56,7 @@
             ko.applyBindings(vm, document.getElementById('boxContenidoFile'));
             ko.applyBindings(vmCliente, document.getElementById('modalCrearCliente'));
             ko.applyBindings(vmBiblia, document.getElementById('modalCrearBiblia'));
-            
+
         }
 
         function crearBibliaOnFly() {
@@ -183,6 +183,7 @@
                 console.log("servicios: " + ko.toJSON(this));
             };
             self.enviar = function () {
+                console.log("ENVIANDO: " + ko.toJSON(this));
                 $.ajax({
                     url: '/api/files/Crear',
                     cache: false,
@@ -239,7 +240,7 @@
 
             self.agregarServicio = function () {
                 self.servicios.push(
-                    { fecha: "", ciudad: "", servicio: "", hotel: "", pasajeros: null, nombrePasajero: "", /*agencia: 1,*/ tren: "", alm: "", obs: "" }
+                    { fecha: "", ciudad: "", servicio: "", hotel: "", pasajeros: 0, nombrePasajero: "", /*agencia: 1,*/ tren: "", alm: "", obs: "" }
                 );
             };
             self.quitarServicio = function (serv) {
@@ -247,7 +248,7 @@
             };
             self.agregarTransporte = function () {
                 self.transportes.push(
-                    { fecha: "", ciudad: "", horaRecojo: "0", horaSalida: "00", vuelo: "", servicio: "", pasajeros: null, nombrePasajero: "", vr: "", /*agencia: "",*/ tc: "", transp: "", obs: "" }
+                    { fecha: "", ciudad: "", horaRecojo: "0", horaSalida: "00", vuelo: "", servicio: "", pasajeros: 0, nombrePasajero: "", vr: "", /*agencia: "",*/ tc: "", transp: "", obs: "" }
                 );
             };
             self.quitarTransporte = function (trans) {
@@ -448,8 +449,17 @@
     </div>
 </div>
 <div id="contDialogo"></div>
+<div id="contenedorTransaccionFile"></div>
 @*<button class="btn btn-warning pull-right" onclick="cargarAgencias()">Guardar</button>*@
-<button class="btn btn-primary pull-right" data-bind="click: enviar">Guardar</button>
+
+@*<button class="btn btn-primary pull-right" data-bind="click: enviar">Guardar</button>*@
+
+<button class="btn btn-primary pull-right"
+        onclick="postearVmQuick('/api/files/guardar',vm,'File creado','contenedorTransaccionFile',ClienteAgregadoCallback,null)">
+
+    Guardar
+</button>
+
 @*<button class="btn btn-danger pull-right" onclick="actualizarservs()">update</button>*@
 <button class="btn btn-default" onclick="window.location.href = '/Files' ">Cancelar</button>
 @*<div>
@@ -520,7 +530,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Nuevo cliente</h4>
+                <h4 class="modal-title">Nueva biblia</h4>
             </div>
 
             <div class="modal-body">
@@ -535,7 +545,7 @@
 
                 <div class="form-group">
                     <label>Año</label>
-                    <input class="form-control" type="number" data-bind="value: anho" placeholder="2018"/>
+                    <input class="form-control" type="number" data-bind="value: anho" placeholder="2018" />
                 </div>
             </div>
             <div class="modal-footer">

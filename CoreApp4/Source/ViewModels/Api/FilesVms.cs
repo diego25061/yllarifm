@@ -1,50 +1,148 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using YllariFM.Models.DB;
+using YllariFM.Source.Common;
 
 namespace YllariFM.Source.ViewModels.Api {
 
     public class ServServDto {
         public int IdServicio;
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Definir fecha en servicio")]
         public string Fecha;
         public string Ciudad;
+        [Required(ErrorMessage = "Definir nombre en servicio")]
         public string Servicio;
         public string Hotel;
+        [Required(ErrorMessage = "Definir cantidad de pasajeros en servicio")]
         public int Pasajeros;
+        [Required(ErrorMessage = "Definir nombre de pasajero en servicio")]
         public string NombrePasajero;
         //public int idAgencia;
         public string Tren;
         public string Alm;
         public string Obs;
+        public ServServDto() {
+
+        }
     }
 
     public class ServTransporteDto {
         public int IdServicio;
+        [Required(ErrorMessage = "Definir fecha en transporte")]
         public string Fecha;
         public string Ciudad;
+        [Required(ErrorMessage = "Definir hora de recojo en transporte")]
         public string HoraRecojo;
+        [Required(ErrorMessage = "Definir hora de salida en transporte")]
         public string HoraSalida;
         public string Vuelo;
+        [Required(ErrorMessage = "Definir nombre de transporte")]
         public string Servicio;
+        [Required(ErrorMessage = "Definir cantidad de pasajeros en servicio")]
         public int Pasajeros;
+        [Required(ErrorMessage = "Definir nombre de pasajero en servicio")]
         public string NombrePasajero;
         public string Vr;
         public string Tc;
         public string Transp;
         public string Obs;
         public string Hotel;
+        public ServTransporteDto() {
+
+        }
     }
 
     public class FileDto {
+        [Required(ErrorMessage = "Codigo de file requerido")]
         public string Codigo { get; set; }
+        [Required(ErrorMessage = "Biblia para file requerida")]
         public int IdBiblia { get; set; }
+        //[Required(ErrorMessage = "Descripcion requerida")]
         public string Descripcion { get; set; }
+        [Required(ErrorMessage = "Agencia para file requerida")]
         public int IdAgencia { get; set; }
         public string FechaCreacion { get; set; }
-        public List<ServServDto> Servicios;
-        public List<ServTransporteDto> Transportes;
+        [ValidateCollection]
+        public List<ServServDto> Servicios { get; set; }
+        [ValidateCollection]
+        public List<ServTransporteDto> Transportes { get; set; }
+
+        public FileDto() {
+            Servicios = new List<ServServDto>();
+            Transportes = new List<ServTransporteDto>();
+        }
+
+        public static bool Validar(FileDto dto, out List<string> outErrores) {
+            List<string> errores = new List<string>();
+            bool res = true;
+            if (Utils.stringVacio(dto.Codigo)) {
+                res = false;
+                errores.Add("Codigo de file no definido");
+            }
+            if (dto.IdBiblia == 0) {
+                res = false;
+                errores.Add("Biblia de file no definida");
+            }
+            if (dto.IdBiblia == 0) {
+                res = false;
+                errores.Add("Agencia de file no definida");
+            }
+            int a = 0;
+            foreach (var s in dto.Servicios) {
+                a++;
+                if (Utils.stringVacio(s.Fecha)) {
+                    res = false;
+                    errores.Add("Servicio " + a + " no tiene una fecha definida");
+                }
+                if (Utils.stringVacio(s.Servicio)) {
+                    res = false;
+                    errores.Add("Servicio " + a + " no tiene un nombre definido");
+                }
+                if (s.Pasajeros < 1) {
+                    res = false;
+                    errores.Add("Servicio " + a + " no tiene una cantidad de pasajeros mayor a 0");
+                }
+                if (Utils.stringVacio(s.NombrePasajero)) {
+                    res = false;
+                    errores.Add("Servicio " + a + " no tiene un nombre de pasajero principal");
+                }
+            }
+
+
+            a = 0;
+            foreach (var s in dto.Transportes) {
+                a++;
+                if (Utils.stringVacio(s.Fecha)) {
+                    res = false;
+                    errores.Add("Transporte " + a + " no tiene una fecha definida");
+                }
+                if (Utils.stringVacio(s.HoraRecojo)) {
+                    res = false;
+                    errores.Add("Transporte " + a + " no tiene una hora de recojo definida");
+                }
+                if (Utils.stringVacio(s.HoraSalida)) {
+                    res = false;
+                    errores.Add("Transporte " + a + " no tiene una hora de salida definida");
+                }
+                if (Utils.stringVacio(s.Servicio)) {
+                    res = false;
+                    errores.Add("Transporte " + a + " no tiene un nombre definido");
+                }
+                if (s.Pasajeros < 1) {
+                    res = false;
+                    errores.Add("Transporte " + a + " no tiene una cantidad de pasajeros mayor a 0");
+                }
+                if (Utils.stringVacio(s.NombrePasajero)) {
+                    res = false;
+                    errores.Add("Transporte " + a + " no tiene un nombre de pasajero principal");
+                }
+            }
+            outErrores = errores;
+            return res;
+        }
 
         public static FileDto GenerarDto(File file) {
             FileDto dto = new FileDto {
@@ -133,9 +231,9 @@ namespace YllariFM.Source.ViewModels.Api {
             foreach (var trans in dto.Transportes) {
                 var s = new Servicio() {
                     IdServicio = trans.IdServicio,
-                    Fecha = Utils.stringFechaADatetime(trans.Fecha),
                     TipoServicio = Constantes.TipoServicio.Transporte,
                     Ciudad = trans.Ciudad,
+                    Fecha = Utils.stringFechaADatetime(trans.Fecha),
                     HoraRecojo = Utils.stringHoraATime(trans.HoraRecojo),
                     HoraSalida = Utils.stringHoraATime(trans.HoraSalida),
                     Vuelo = trans.Vuelo,

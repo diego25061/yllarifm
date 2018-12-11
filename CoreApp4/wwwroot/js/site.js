@@ -142,6 +142,8 @@ function objetoErrorAMsj(error, mostrarTrace) {
 }
 
 function postearVmQuick(ruta, viewModel, mensajeExito, idContenedorError, onSuccess, onError) {
+
+    console.log("ENVIANDO: " + ko.toJSON(viewModel));
     $.ajax({
         url: ruta,
         cache: false,

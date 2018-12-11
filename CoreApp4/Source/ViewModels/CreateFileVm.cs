@@ -92,7 +92,7 @@ namespace YllariFM.Source.ViewModels
             {
                 var s = new Servicio()
                 {
-                    Fecha = Utils.stringFechaADatetime(trans.fecha),
+                    //Fecha = Utils.stringFechaADatetime(trans.fecha),
                     TipoServicio = Constantes.TipoServicio.Transporte,
                     Ciudad = trans.ciudad,
                     HoraRecojo = Utils.stringHoraATime(trans.horaRecojo),

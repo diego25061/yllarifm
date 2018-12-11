@@ -47,6 +47,9 @@ namespace YllariFM.Controllers.Api {
         [HttpPost("guardar")]
         public ActionResult Post([FromBody] ClienteDto cliente) {
             try {
+                if (!Utils.stringLleno(cliente.Nombre))
+                    return Json(new Respuesta("Nombre de cliente vacío"), StatusCodes.Status400BadRequest);
+
                 if (Utils.stringLleno(cliente.CorreoContacto))
                     if (!Utils.IsValidEmail(cliente.CorreoContacto))
                         return Json(new Respuesta("Correo de contacto invalido"), StatusCodes.Status400BadRequest);

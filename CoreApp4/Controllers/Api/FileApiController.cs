@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YllariFM.Models.DB;
+using YllariFM.Source;
 using YllariFM.Source.ViewModels;
 using YllariFM.Source.ViewModels.Api;
 
@@ -51,6 +52,22 @@ namespace YllariFM.Controllers.Api {
         [HttpPost("guardar")]
         public ActionResult Post([FromBody] FileDto dto ) {
             try {
+                
+                if (dto == null)
+                    return Json(new Respuesta("File a guardar nulo"), StatusCodes.Status400BadRequest);
+                var existente = _context.File.Where(x => x.Codigo == dto.Codigo).FirstOrDefault();
+                if(existente!=null)
+                    return Json(new Respuesta("Un file con codigo '"+dto.Codigo+"' ya existe. Elegir otro código."), StatusCodes.Status400BadRequest);
+
+                List<string> errores = new List<string>();
+                if(!FileDto.Validar(dto,out errores)) {
+                    return Json(new Respuesta("Error al guardar file: </br>" + Utils.listaStringsAListaHtml(errores)), StatusCodes.Status400BadRequest);
+                }
+                /*
+                if (!ModelState.IsValid) {
+                    string errores = Utils.getHtmlStringErroresModelState(ModelState);
+                    return Json(new Respuesta("Error al guardar file: </br>" + errores), StatusCodes.Status400BadRequest);
+                }*/
                 var dbo = FileDto.GenerarDbo(dto);
                 _context.File.Add(dbo);
                 _context.SaveChanges();
