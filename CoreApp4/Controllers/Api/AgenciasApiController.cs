@@ -12,6 +12,7 @@ using YllariFM.Source.ViewModels.Api;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace YllariFM.Controllers.Api {
+    /*
     [Route("api/agencias/")]
     public class AgenciasApiController : BaseController {
         private readonly YllariFmContext _context;
@@ -96,4 +97,5 @@ namespace YllariFM.Controllers.Api {
             }
         }
     }
+    */
 }

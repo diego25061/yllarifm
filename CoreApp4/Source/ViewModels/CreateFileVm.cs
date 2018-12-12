@@ -63,7 +63,7 @@ namespace YllariFM.Source.ViewModels
             File file = new File();
             file.Codigo = codigo;
             file.IdBiblia = idBiblia;
-            file.IdAgencia = idAgencia;
+            file.IdCliente = idAgencia;
             file.Descripcion = descripcion;
             file.FechaCreacion = DateTime.Now;
 
@@ -120,7 +120,7 @@ namespace YllariFM.Source.ViewModels
             file.codigo = dbFile.Codigo;
             file.descripcion = dbFile.Descripcion;
             file.idBiblia = dbFile.IdBiblia;
-            file.idAgencia = dbFile.IdAgencia;
+            file.idAgencia = dbFile.IdCliente;
 
             //List<ServicioServ> servs = new List<ServicioServ>();
             //List<ServicioTransporte> trans = new List<ServicioTransporte>();

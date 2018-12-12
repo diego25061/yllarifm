@@ -63,7 +63,7 @@ namespace YllariFM.Source.ViewModels.Api {
         //[Required(ErrorMessage = "Descripcion requerida")]
         public string Descripcion { get; set; }
         [Required(ErrorMessage = "Agencia para file requerida")]
-        public int IdAgencia { get; set; }
+        public int IdCliente { get; set; }
         public string FechaCreacion { get; set; }
         [ValidateCollection]
         public List<ServServDto> Servicios { get; set; }
@@ -149,7 +149,7 @@ namespace YllariFM.Source.ViewModels.Api {
                 Codigo = file.Codigo,
                 Descripcion = file.Descripcion,
                 IdBiblia = file.IdBiblia,
-                IdAgencia = file.IdAgencia,
+                IdCliente = file.IdCliente,
                 FechaCreacion = Utils.formatoFecha(file.FechaCreacion),
                 Servicios = new List<ServServDto>(),
                 Transportes = new List<ServTransporteDto>()
@@ -208,11 +208,11 @@ namespace YllariFM.Source.ViewModels.Api {
             file.Codigo = dto.Codigo;
             file.IdBiblia = dto.IdBiblia;
             file.Descripcion = dto.Descripcion;
-            file.IdAgencia = dto.IdAgencia;
+            file.IdCliente = dto.IdCliente;
             file.FechaCreacion = DateTime.Now;
             List<Servicio> servs = new List<Servicio>();
 
-            foreach (var se in dto.Servicios) {
+            foreach (var se in dto.Servicios) {/*
                 var dbServ = new Servicio() {
                     IdServicio = se.IdServicio,
                     Fecha = Utils.stringFechaADatetime(se.Fecha),
@@ -225,11 +225,25 @@ namespace YllariFM.Source.ViewModels.Api {
                     Tren = se.Tren,
                     Alm = se.Alm,
                     Observaciones = se.Obs
-                };
-                servs.Add(dbServ);
+                };*/
+                var s = new Servicio();
+                s.IdServicio = se.IdServicio;
+                s.Fecha = Utils.stringFechaADatetime(se.Fecha);
+                s.TipoServicio = Constantes.TipoServicio.Transporte;
+                s.Nombre = Utils.filtrarString(se.Servicio);
+                s.Ciudad = Utils.filtrarString(se.Ciudad);
+                s.Hotel = Utils.filtrarString(se.Hotel);
+                s.Pasajeros = se.Pasajeros;
+                s.NombrePasajero = Utils.filtrarString(se.NombrePasajero);
+                s.Tren = Utils.filtrarString(se.Tren);
+                s.Alm = Utils.filtrarString(se.Alm);
+                s.Observaciones = Utils.filtrarString(se.Obs);
+
+                servs.Add(s);
             }
             foreach (var trans in dto.Transportes) {
-                var s = new Servicio() {
+
+                var s = new Servicio();/* {
                     IdServicio = trans.IdServicio,
                     TipoServicio = Constantes.TipoServicio.Transporte,
                     Ciudad = trans.Ciudad,
@@ -244,7 +258,22 @@ namespace YllariFM.Source.ViewModels.Api {
                     Observaciones = trans.Obs,
                     Pasajeros = trans.Pasajeros,
                     Tc = trans.Tc
-                };
+                };*/
+                s.IdServicio = trans.IdServicio;
+                s.TipoServicio = Constantes.TipoServicio.Transporte;
+                s.Ciudad = Utils.filtrarString(trans.Ciudad);
+                s.Fecha = Utils.stringFechaADatetime(trans.Fecha);
+                s.HoraRecojo = Utils.stringHoraATime(trans.HoraRecojo);
+                s.HoraSalida = Utils.stringHoraATime(trans.HoraSalida);
+                s.Vuelo = Utils.filtrarString(trans.Vuelo);
+                s.Nombre = Utils.filtrarString(trans.Servicio);
+                s.NombrePasajero = Utils.filtrarString(trans.NombrePasajero);
+                s.Vr = Utils.filtrarString(trans.Vr);
+                s.Transporte = Utils.filtrarString(trans.Transp);
+                s.Observaciones = Utils.filtrarString(trans.Obs);
+                s.Pasajeros = trans.Pasajeros;
+                s.Tc = Utils.filtrarString(trans.Tc);
+
                 servs.Add(s);
             }
             file.Servicio = servs;
@@ -266,6 +295,8 @@ namespace YllariFM.Source.ViewModels.Api {
             return dtos;
         }
 
+        #region old
+        /*
         public static void ActualizarDbo2(File actualizado, File nuevo) {
 
             actualizado.Codigo = nuevo.Codigo;
@@ -312,5 +343,8 @@ namespace YllariFM.Source.ViewModels.Api {
             }
 
         }
+        */
+        #endregion
+
     }
 }

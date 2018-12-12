@@ -176,7 +176,7 @@
             var self = this;
             self.codigo = ko.observable();
             self.idBiblia = ko.observable();
-            self.idAgencia = ko.observable();
+            self.idCliente = ko.observable();
             self.descripcion = ko.observable();
 
             self.exponer = function () {
@@ -305,7 +305,7 @@
                                 <select class="form-control" data-bind="options: clientes,
                                         optionsText: 'Nombre',
                                         optionsValue: 'IdCliente',
-                                        value: idAgencia"></select>
+                                        value: idCliente"></select>
 
                                 @*<input class="form-control" type="text" data-bind="value: agencia" placeholder="Golden" />*@
                                 <a class="input-group-addon" onclick="$('#modalCrearCliente').modal('show');">

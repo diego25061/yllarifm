@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using YllariFM.Models.DB;
+using YllariFM.Source.ViewModels.Vistas;
 
 namespace YllariFM.Controllers
 {
@@ -21,7 +22,17 @@ namespace YllariFM.Controllers
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cliente.ToListAsync());
+            //return View(await _context.Cliente.ToListAsync());
+
+            var clientes = _context.Cliente.Include(f => f.File).ToList();
+            
+            List<ListarClienteVm> lista = new List<ListarClienteVm>();
+            foreach (var c in clientes) {
+                var dto = ListarClienteVm.generarDto(c);
+                dto.filesAsociados = c.File.Count;
+                lista.Add(dto);
+            }
+            return View(lista);
         }
 
         // GET: Clientes/Details/5

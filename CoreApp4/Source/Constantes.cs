@@ -22,6 +22,14 @@ namespace YllariFM.Source
         public class TipoCliente {
             public const string Persona = "PERSO";
             public const string Empresa = "EMPRE";
+            public static string aTexto(string tipo) {
+                if (tipo == Persona)
+                    return "Persona";
+                else if (tipo == Empresa)
+                    return "Empresa";
+                else
+                    throw new InvalidOperationException("TIPO INVALIDO");
+            }
         }
     }
 }

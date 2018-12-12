@@ -6,7 +6,6 @@ namespace YllariFM.Models.DB
 {
     public partial class YllariFmContext : DbContext
     {
-        public virtual DbSet<Agencia> Agencia { get; set; }
         public virtual DbSet<Biblia> Biblia { get; set; }
         public virtual DbSet<Ciudad> Ciudad { get; set; }
         public virtual DbSet<Cliente> Cliente { get; set; }
@@ -17,39 +16,11 @@ namespace YllariFM.Models.DB
         public virtual DbSet<Proveedor> Proveedor { get; set; }
         public virtual DbSet<RegistroRecordatorio> RegistroRecordatorio { get; set; }
         public virtual DbSet<Servicio> Servicio { get; set; }
-
         public YllariFmContext() {
         }
         public YllariFmContext(DbContextOptions<YllariFmContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<Agencia>(entity =>
-            {
-                entity.HasKey(e => e.IdAgencia);
-
-                entity.Property(e => e.Ciudad)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CorreoContacto)
-                    .IsRequired()
-                    .HasMaxLength(80)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CorreoExtra)
-                    .HasMaxLength(80)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Nombre)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Pais)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<Biblia>(entity =>
             {
                 entity.HasKey(e => e.IdBiblia);
@@ -76,6 +47,10 @@ namespace YllariFM.Models.DB
             modelBuilder.Entity<Cliente>(entity =>
             {
                 entity.HasKey(e => e.IdCliente);
+
+                entity.HasIndex(e => e.Nombre)
+                    .HasName("nombre unico")
+                    .IsUnique();
 
                 entity.Property(e => e.Ciudad)
                     .HasMaxLength(50)
@@ -127,12 +102,6 @@ namespace YllariFM.Models.DB
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.HasOne(d => d.IdAgenciaNavigation)
-                    .WithMany(p => p.File)
-                    .HasForeignKey(d => d.IdAgencia)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_File_Agencia");
-
                 entity.HasOne(d => d.IdBibliaNavigation)
                     .WithMany(p => p.File)
                     .HasForeignKey(d => d.IdBiblia)
@@ -142,6 +111,7 @@ namespace YllariFM.Models.DB
                 entity.HasOne(d => d.IdClienteNavigation)
                     .WithMany(p => p.File)
                     .HasForeignKey(d => d.IdCliente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_File_Cliente");
             });
 

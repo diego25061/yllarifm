@@ -25,7 +25,7 @@ namespace YllariFM.Controllers.Api {
         [HttpGet("todo")]
         public ActionResult Get() {
             try {
-                var files = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation).Include(x => x.Servicio).ToList();
+                var files = _context.File.Include(f => f.IdClienteNavigation).Include(f => f.IdBibliaNavigation).Include(x => x.Servicio).ToList();
                 var lista = FileDto.GenerarDtos(files);
                 return Json(lista);
             } catch (Exception ex) {
@@ -37,7 +37,7 @@ namespace YllariFM.Controllers.Api {
         [HttpGet("{id}")]
         public ActionResult Get(int id) {
             try {
-                var file = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation).Include(x => x.Servicio).Where(x => x.IdFile == id).FirstOrDefault();
+                var file = _context.File.Include(f => f.IdClienteNavigation).Include(f => f.IdBibliaNavigation).Include(x => x.Servicio).Where(x => x.IdFile == id).FirstOrDefault();
                 if (file == null) {
                     return Json(new Respuesta("File " + id + " no encontrado"), StatusCodes.Status503ServiceUnavailable);
                 } else {
@@ -61,7 +61,7 @@ namespace YllariFM.Controllers.Api {
 
                 List<string> errores = new List<string>();
                 if(!FileDto.Validar(dto,out errores)) {
-                    return Json(new Respuesta("Error al guardar file: </br>" + Utils.listaStringsAListaHtml(errores)), StatusCodes.Status400BadRequest);
+                    return Json(new Respuesta("Error al crear file: </br>" + Utils.listaStringsAListaHtml(errores)), StatusCodes.Status400BadRequest);
                 }
                 /*
                 if (!ModelState.IsValid) {
@@ -83,7 +83,7 @@ namespace YllariFM.Controllers.Api {
 
             using (var transaction = _context.Database.BeginTransaction()) {
                 try {
-                    var encontrado = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation).Include(x => x.Servicio).Where(x => x.IdFile == id).FirstOrDefault();
+                    var encontrado = _context.File.Include(f => f.IdClienteNavigation).Include(f => f.IdBibliaNavigation).Include(x => x.Servicio).Where(x => x.IdFile == id).FirstOrDefault();
                     if (encontrado == null) {
                         transaction.Rollback();
                         return Json(new Respuesta("El file a actualizar no existe"), StatusCodes.Status500InternalServerError);
@@ -94,7 +94,7 @@ namespace YllariFM.Controllers.Api {
                         encontrado.Codigo = obj.Codigo;
                         encontrado.IdBiblia = obj.IdBiblia;
                         encontrado.Descripcion = obj.Descripcion;
-                        encontrado.IdAgencia = obj.IdAgencia;
+                        encontrado.IdCliente= obj.IdCliente;
                         //encontrado.Servicio = obj.Servicio;
                         List<int> sobrantes = new List<int>();
                         foreach (var s in encontrado.Servicio) {

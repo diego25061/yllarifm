@@ -30,13 +30,13 @@ namespace YllariFM.Controllers
             var YllariFmContext = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation);
             return View(await YllariFmContext.ToListAsync());
             */
-            var files = _context.File.Include(f => f.IdAgenciaNavigation).Include(f => f.IdBibliaNavigation).Include(x=>x.Servicio);
+            var files = _context.File.Include(f => f.IdClienteNavigation).Include(f => f.IdBibliaNavigation).Include(x=>x.Servicio);
             List<ListarFilesVm.File> lista = new List<ListarFilesVm.File>();
             foreach(var fi in files)
             {
                 ListarFilesVm.File f = new ListarFilesVm.File()
                 {
-                    Agencia = fi.IdAgenciaNavigation.Nombre,
+                    Cliente = fi.IdClienteNavigation.Nombre,
                     Codigo = fi.Codigo,
                     Descripcion = fi.Descripcion,
                     Estado = "Abierto",
@@ -61,7 +61,7 @@ namespace YllariFM.Controllers
             }
 
             var file = await _context.File
-                .Include(f => f.IdAgenciaNavigation)
+                .Include(f => f.IdClienteNavigation)
                 .Include(f => f.IdBibliaNavigation)
                 .SingleOrDefaultAsync(m => m.IdFile == id);
             if (file == null)
@@ -71,11 +71,11 @@ namespace YllariFM.Controllers
 
             return View(file);
         }
-
+        /*
         // GET: Files/Create
         public IActionResult Create()
         {
-            ViewData["IdAgencia"] = new SelectList(_context.Agencia, "IdAgencia", "CorreoContacto");
+            ViewData["IdAgencia"] = new SelectList(_context.Cliente, "IdAgencia", "CorreoContacto");
             ViewData["IdBiblia"] = new SelectList(_context.Biblia, "IdBiblia", "IdBiblia");
             return View();
         }
@@ -93,10 +93,10 @@ namespace YllariFM.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdAgencia"] = new SelectList(_context.Agencia, "IdAgencia", "CorreoContacto", file.IdAgencia);
+            ViewData["IdAgencia"] = new SelectList(_context.Cliente, "IdAgencia", "CorreoContacto", file.IdAgencia);
             ViewData["IdBiblia"] = new SelectList(_context.Biblia, "IdBiblia", "IdBiblia", file.IdBiblia);
             return View(file);
-        }
+        }*/
 
         // GET: Files/Actualizar/5
         public async Task<IActionResult> Actualizar(int? id)
@@ -154,7 +154,7 @@ namespace YllariFM.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdAgencia"] = new SelectList(_context.Agencia, "IdAgencia", "CorreoContacto", file.IdAgencia);
+            ViewData["IdAgencia"] = new SelectList(_context.Cliente, "IdAgencia", "CorreoContacto", file.IdCliente);
             ViewData["IdBiblia"] = new SelectList(_context.Biblia, "IdBiblia", "IdBiblia", file.IdBiblia);
             return View(file);
         }
@@ -168,7 +168,7 @@ namespace YllariFM.Controllers
             }
 
             var file = await _context.File
-                .Include(f => f.IdAgenciaNavigation)
+                .Include(f => f.IdClienteNavigation)
                 .Include(f => f.IdBibliaNavigation)
                 .SingleOrDefaultAsync(m => m.IdFile == id);
             if (file == null)
@@ -299,7 +299,7 @@ namespace YllariFM.Controllers
                     var editado = vm.toDbFile();
                     //editando campos
                     actual.Descripcion = editado.Descripcion;
-                    actual.IdAgencia = editado.IdAgencia;
+                    actual.IdCliente = editado.IdCliente;
                     actual.IdBiblia = editado.IdBiblia;
                     actual.Servicio = editado.Servicio;
                     //-------

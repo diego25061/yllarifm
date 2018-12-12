@@ -114,6 +114,12 @@ namespace YllariFM.Source
             return !stringLleno(s);
         }
 
+        public static string filtrarString(string s) {
+            if (stringVacio(s))
+                return null;
+            else return s;
+        }
+
         public static bool stringLleno(string s) {
             return !(String.IsNullOrEmpty(s) || String.IsNullOrWhiteSpace(s));
         }
@@ -147,5 +153,7 @@ namespace YllariFM.Source
             }
             return ss;
         }
+
+        
     }
 }

@@ -14,7 +14,7 @@ namespace YllariFM.Source.ViewModels.Vistas.Files
             public string Codigo { get; set; }
             public string Descripcion { get; set; }
             public string NombreBiblia { get; set; }
-            public string Agencia { get; set; }
+            public string Cliente { get; set; }
             public string FechaCreacion { get; set; }
             public int ServiciosServ { get; set; }
             public int ServiciosTransporte { get; set; }

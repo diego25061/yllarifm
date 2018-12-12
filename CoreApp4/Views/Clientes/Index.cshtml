@@ -1,10 +1,39 @@
-﻿@model IEnumerable<YllariFM.Models.DB.Cliente>
+﻿@model IEnumerable<YllariFM.Source.ViewModels.Vistas.ListarClienteVm>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section head3{
+
+    <link rel="stylesheet" href="~/theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+}
+
+@section tail2{
+    <script src="~/theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+}
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('#tabla1').DataTable( {
+              "columnDefs": [
+                { "width": "10%", "targets": 5 }
+              ]
+            } );
+        });
+        /*
+        function borrar(idEntidad, idModal) {
+            console.log("asd!");
+        }*/
+
+    </script>
+
+}
+
+@*
 <h2>Index</h2>
 
 <p>
@@ -13,60 +42,149 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tipo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CorreoContacto)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.NumeroContacto)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.NumeroAdicional)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Pais)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Ciudad)
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CorreoContacto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroContacto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroAdicional)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pais)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ciudad)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tipo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CorreoContacto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroContacto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroAdicional)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pais)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ciudad)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdCliente">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdCliente">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdCliente">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tipo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CorreoContacto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroContacto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroAdicional)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pais)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ciudad)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdCliente">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdCliente">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdCliente">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+    *@
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Clientes</h2>
+
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-hover dataTable" id="tabla1">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Nombre
+                                    </th>
+                                    <th>
+                                        Tipo
+                                    </th>
+                                    <th>
+                                        Correos
+                                    </th>
+                                    <th>
+                                        Números de contacto
+                                    </th>
+                                    <th>
+                                        Pais
+                                    </th>
+                                    <th>
+                                        Ciudad
+                                    </th>
+                                    <th>
+                                        Files asociados
+                                    </th>
+                                    <th>Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model) {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Nombre)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Tipo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Correos)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NumerosContacto)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Pais)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Ciudad)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.filesAsociados)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.IdCliente" class="btn btn-default">
+                                            <span class="fa fa-pencil"></span>
+                                        </a>
+                                        @*
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id" class="fa fa-transgender-alt">Delete</a>
+                                        *@
+
+                                        <a asp-action="Delete" asp-route-id="@item.IdCliente" class="btn btn-default">
+                                            <span class="fa fa-trash-o"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-default" onclick="window.location.href='/Home/Index'">Ir al inicio</button>
+        <button type="button" class="btn btn-primary pull-right" onclick="window.location.href='/Clientes/Create'">Crear Cliente</button>
+    </div>
+</div>
