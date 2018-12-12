@@ -2,37 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using YllariFM.Models.DB;
-using YllariFM.Source.ViewModels;
-using YllariFM.Source.ViewModels.Vistas;
 
-namespace CoreApp4.Controllers {
-    //[Route("api/reeee/")]
-
-        /*
-    public class AgenciasController : Controller
+namespace YllariFM.Controllers
+{
+    public class ClientesController : Controller
     {
         private readonly YllariFmContext _context;
-        
-        public AgenciasController(YllariFmContext context)
+
+        public ClientesController(YllariFmContext context)
         {
             _context = context;
         }
 
-
-        // GET: Agencias
-        public async Task<IActionResult> Index(){
-            var agencias = _context.Agencia.ToList();
-            List<ListarAgenciaVm> lista = Mapper.Map<List<Agencia>, List<ListarAgenciaVm>>(agencias);
-            return View(lista);
+        // GET: Clientes
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Cliente.ToListAsync());
         }
 
-        // GET: Agencias/Details/5
+        // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -40,39 +32,39 @@ namespace CoreApp4.Controllers {
                 return NotFound();
             }
 
-            var agencia = await _context.Agencia
-                .SingleOrDefaultAsync(m => m.IdAgencia == id);
-            if (agencia == null)
+            var cliente = await _context.Cliente
+                .SingleOrDefaultAsync(m => m.IdCliente == id);
+            if (cliente == null)
             {
                 return NotFound();
             }
 
-            return View(agencia);
+            return View(cliente);
         }
 
-        // GET: Agencias/Create
+        // GET: Clientes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Agencias/Create
+        // POST: Clientes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdAgencia,Nombre,CorreoContacto,CorreoExtra,Pais,Ciudad")] Agencia agencia)
+        public async Task<IActionResult> Create([Bind("IdCliente,Nombre,Tipo,CorreoContacto,NumeroContacto,NumeroAdicional,Pais,Ciudad")] Cliente cliente)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(agencia);
+                _context.Add(cliente);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(agencia);
+            return View(cliente);
         }
 
-        // GET: Agencias/Edit/5
+        // GET: Clientes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,22 +72,22 @@ namespace CoreApp4.Controllers {
                 return NotFound();
             }
 
-            var agencia = await _context.Agencia.SingleOrDefaultAsync(m => m.IdAgencia == id);
-            if (agencia == null)
+            var cliente = await _context.Cliente.SingleOrDefaultAsync(m => m.IdCliente == id);
+            if (cliente == null)
             {
                 return NotFound();
             }
-            return View(agencia);
+            return View(cliente);
         }
 
-        // POST: Agencias/Edit/5
+        // POST: Clientes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdAgencia,Nombre,CorreoContacto,CorreoExtra,Pais,Ciudad")] Agencia agencia)
+        public async Task<IActionResult> Edit(int id, [Bind("IdCliente,Nombre,Tipo,CorreoContacto,NumeroContacto,NumeroAdicional,Pais,Ciudad")] Cliente cliente)
         {
-            if (id != agencia.IdAgencia)
+            if (id != cliente.IdCliente)
             {
                 return NotFound();
             }
@@ -104,12 +96,12 @@ namespace CoreApp4.Controllers {
             {
                 try
                 {
-                    _context.Update(agencia);
+                    _context.Update(cliente);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AgenciaExists(agencia.IdAgencia))
+                    if (!ClienteExists(cliente.IdCliente))
                     {
                         return NotFound();
                     }
@@ -120,10 +112,10 @@ namespace CoreApp4.Controllers {
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(agencia);
+            return View(cliente);
         }
 
-        // GET: Agencias/Delete/5
+        // GET: Clientes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,33 +123,30 @@ namespace CoreApp4.Controllers {
                 return NotFound();
             }
 
-            var agencia = await _context.Agencia
-                .SingleOrDefaultAsync(m => m.IdAgencia == id);
-            if (agencia == null)
+            var cliente = await _context.Cliente
+                .SingleOrDefaultAsync(m => m.IdCliente == id);
+            if (cliente == null)
             {
                 return NotFound();
             }
 
-            return View(agencia);
+            return View(cliente);
         }
 
-        // POST: Agencias/Delete/5
+        // POST: Clientes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var agencia = await _context.Agencia.SingleOrDefaultAsync(m => m.IdAgencia == id);
-            _context.Agencia.Remove(agencia);
+            var cliente = await _context.Cliente.SingleOrDefaultAsync(m => m.IdCliente == id);
+            _context.Cliente.Remove(cliente);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AgenciaExists(int id)
+        private bool ClienteExists(int id)
         {
-            return _context.Agencia.Any(e => e.IdAgencia == id);
+            return _context.Cliente.Any(e => e.IdCliente == id);
         }
-
-
     }
-    */
 }
