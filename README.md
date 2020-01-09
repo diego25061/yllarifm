@@ -1,2 +1,2 @@
 # Yllari File Manager
-Gestor de files para Yllari Travel
+Gestor de files
